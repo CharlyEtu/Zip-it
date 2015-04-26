@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Zipit</string>
+    <string name="action_settings">Settings</string>
+    <string name="icon_item">Icon Item</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_extra">Item extra information</string>
+    <string name="item_date">Item last modified date</string>
+    <string name="pathlocal">Stockage Interne ></string>
+    <string name="pathsd">Carte SD ></string>
+    <string name="element">élément</string>
+    <string name="elements">éléments</string>
+    <string name="toast_message">est un fichier, vous ne pourrez l\'ouvrir!</string>
+    <string name="title_activity_splash_activity">Splash_activity</string>
+
+    <string name="sd_explorer_button">Carte SD</string>
+    <string name="local_explorer_button">Stockage de l\'appareil</string>
+    <string name="write_sms_button">Ecrire SMS</string>
+    <string name="read_sms_button">Lire SMS</string>
+    <string name="picture_explorer_button">Images</string>
+    <string name="video_explorer_button">Vidéos</string>
+    <string name="contacts_explorer_button">Contacts</string>
+
+
+
+    <string name="title_activity_menu_activity">Menu_activity</string>
+</resources>

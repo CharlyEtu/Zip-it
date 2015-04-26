@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="menu_activity_background">#eeeeee</color>
+    <color name="menu_activity_row_background">#ffffff</color>
+    <color name="menu_activity_string_color">#0b8043</color>
+</resources>

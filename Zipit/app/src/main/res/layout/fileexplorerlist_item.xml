@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <ImageView
+        android:id="@+id/item_icon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/folder"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@string/icon_item" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/item_icon"
+        android:layout_marginTop="5dip"
+        android:layout_marginLeft="5dip"
+        android:text="@string/item_name"
+        />
+
+    <TextView
+        android:id="@+id/item_extra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/item_icon"
+        android:layout_below="@+id/item_name"
+        android:layout_marginLeft="10dip"
+        android:text="@string/item_extra"
+        />
+
+    <TextView
+        android:id="@+id/item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dip"
+        android:text="@string/item_date"
+        />
+
+</RelativeLayout>
