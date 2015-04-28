@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.File;
 
 
 public class Menu_activity extends ActionBarActivity {
@@ -23,11 +26,45 @@ public class Menu_activity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_menu_activity);
+
+		//Variable pour voir si la carte SD existe ou pas
+		Boolean isSDPresent = new File("/storage/extSdCard").canRead();
+
+		//Affiche de la valeur sur le terminal
+		//Log.i("Test SD CARD : ====>", "" + isSDPresent);
+
+		//Si la carte n'est pas présente
+		if(!isSDPresent){
+
+			//Utilisation du layout sans SD
+			setContentView(R.layout.activity_menu_activity_no_sd);
+
+		//Si la carte SD existe
+		}else{
+
+			//Utilisation du layout avec la carte SD
+			setContentView(R.layout.activity_menu_activity);
+
+			//Récupérer le bouton SD
+			btn_sd = (Button) findViewById(R.id.btn_sd);
+
+			//Déclarer son listner
+			View.OnClickListener sdListener = new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Menu_activity.this, FileExplorer_activity.class);
+					intent.putExtra("menuchoice", "/storage/extSdCard");
+					Menu_activity.this.startActivity(intent);
+				}
+			};
+
+			//Appliquer le listner dessus
+			btn_sd.setOnClickListener(sdListener);
+		}
 
 		//On récupère tous les boutons du menu
 		btn_local = (Button) findViewById(R.id.btn_internal);
-		btn_sd = (Button) findViewById(R.id.btn_sd);
+
 		btn_sms_W = (Button) findViewById(R.id.btn_write_sms);
 		btn_sms_R = (Button) findViewById(R.id.btn_read_sms);
 		btn_picures = (Button) findViewById(R.id.btn_pictures);
@@ -44,17 +81,10 @@ public class Menu_activity extends ActionBarActivity {
 			}
 		};
 
-		View.OnClickListener sdListener = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(Menu_activity.this, FileExplorer_activity.class);
-				intent.putExtra("menuchoice", "/storage/extSdCard");
-				Menu_activity.this.startActivity(intent);
-			}
-		};
+
 
 		btn_local.setOnClickListener(localListener);
-		btn_sd.setOnClickListener(sdListener);
+
 
 	}
 
