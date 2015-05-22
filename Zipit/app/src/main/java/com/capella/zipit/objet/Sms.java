@@ -1,6 +1,7 @@
 package com.capella.zipit.objet;
 
 /**
+
  * La classe Sms permet de materielliser un sms
  * avec tous les attribues qui vont avec 
  * num, nom, date, heure, message
@@ -15,8 +16,15 @@ public class Sms {
 	private String date;
 	/*heure du msg*/
 	private String heure;
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
 	/*texte du msg*/
 	private String msg;
+
+	private boolean checked;
 	
 	/**
 	 * Constructeur d'un message 
@@ -33,6 +41,7 @@ public class Sms {
 		this.setDate(date);
 		this.setHeure(heure);
 		this.setMsg(msg);
+		this.checked=false;
 	}
 	
 	
@@ -120,7 +129,9 @@ public class Sms {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	
-	
 
+
+	public boolean isChecked() {
+		return checked;
+	}
 }

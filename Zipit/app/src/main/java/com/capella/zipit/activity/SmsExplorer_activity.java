@@ -6,6 +6,7 @@ import java.util.Date;
 
 import android.app.ListActivity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -33,10 +34,10 @@ public class SmsExplorer_activity extends ListActivity{
 	private ArrayList<Sms> liste_sms = new ArrayList<Sms>();
 	
 	/*initialisation des buffers*/
-	private String[] Inbox_name=new String[100],
-			Inbox_number=new String[100],
-			Inbox_date=new String[100],
-			Inbox_type=new String[100],
+	private String[] Inbox_name=new String[4000],
+			Inbox_number=new String[4000],
+			Inbox_date=new String[4000],
+			Inbox_type=new String[4000],
 			Inbox_msg=new String[4000];
 
 	int pos=0;
@@ -57,7 +58,8 @@ public class SmsExplorer_activity extends ListActivity{
 		
 		if(choix.equals("reçu")){
 			Inbox_Read();/*reque sql pr recuperer les sms reçus*/
-			setListAdapter(new InboxArrayAdapter(this,Inbox_name,Inbox_number,Inbox_date,Inbox_type,Inbox_msg));/*on charge la liste des diff sms trouver*/
+			setListAdapter(new InboxArrayAdapter(this,Inbox_name,Inbox_number,Inbox_date,Inbox_type,
+					Inbox_msg));/*on charge la liste des diff sms trouver*/
 		}
 		else if(choix.equals("envoyer")){
 			Send_item_Read();/*reque sql pr recuperer les sms envoyés*/
@@ -87,7 +89,9 @@ public class SmsExplorer_activity extends ListActivity{
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		
 		super.onListItemClick(l, v, position, id);
-		
+
+		View itemview = v;
+
 		/*SMS recus*/
 		if(choix.equals("reçu")){
 			Sms sms = new Sms(Inbox_number[position], Inbox_name[position], Inbox_date[position],
@@ -95,6 +99,7 @@ public class SmsExplorer_activity extends ListActivity{
 			//pb de suppression 
 			/*si le SMS a deja ete selectionner on le supprime*/
 			if(liste_sms.contains(sms)){
+				sms.setChecked(false);
 				liste_sms.remove(sms);
 				Toast.makeText(getBaseContext(), "Vous avez supprimer un sms nom ="+sms.getNom()+
 						" num="+sms.getNum()+" date="+sms.getDate()+" msg="+sms.getMsg(),
@@ -102,6 +107,8 @@ public class SmsExplorer_activity extends ListActivity{
 			}
 			/*dans le cas contraire en le rajout a notre liste*/
 			else{
+				sms.setChecked(true);
+				v.setBackgroundColor(Color.parseColor("#8027ae60"));
 				liste_sms.add(sms);
 				Toast.makeText(getBaseContext(), "Vous avez ajouter un sms nom ="+sms.getNom()+
 						" num="+sms.getNum()+" date="+sms.getDate()+" msg="+sms.getMsg(),
@@ -149,6 +156,8 @@ public class SmsExplorer_activity extends ListActivity{
 //		values.put("body", "message inbox");
 //		getContentResolver().insert(Uri.parse("content://sms/inbox"), values);
 	}
+
+
 
 
 	
