@@ -30,36 +30,4 @@
     <string name="sms">SMS</string>
     <string name="sms_recu_button">SMS reçu</string>
     <string name="sms_envoyer_button">Envoyer</string>
-
-
-
-
-
-    <string name="sms_button">SMS</string>
-
-    <!-- Local Activity & Sd Activity -->
-    <string name="title_activity_file_explorer_activity">Exploreur</string>
-
-
-    <!-- Sms activity -->
-    <string name="title_activity_sms">SMS</string>
-
-    <!-- ecrire sms activity -->
-    <string name="title_activity_sms__w">Ecrire SMS</string>
-    <!-- chaine de caracteres pour activité envoi message -->
-    <string name="numtel">Destinataire : </string>
-    <string name="message">Message : </string>
-    <string name="envoyer">Envoyer</string>
-    <string name="effacer">Effacer</string>
-    <string name="hello_world">Hello world!</string>
-    
-	<!--   lire Sms reçu activity   -->
-    <string name="title_activity_read">Lire SMS</string>
-	<!-- Menu -->
-    <string name="action_compresser">Compresser</string>
-    <string name="action_lire">Decompresser et lire SMS</string>
-    
-    
-    <!--   lire Sms envoyer activity   -->
-    <string name="title_activity_sms_send">SMS envoyer</string>
 </resources>

@@ -1,10 +1,12 @@
-package com.capella.zipit;
+package com.capella.zipit.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Toast;
+
+import com.capella.zipit.R;
 
 import java.io.File;
 

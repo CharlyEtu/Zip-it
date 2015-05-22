@@ -1,4 +1,4 @@
-package com.capella.zipit;
+package com.capella.zipit.objet;
 
 /**
  * Created by capella on 22/04/15.

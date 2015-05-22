@@ -1,4 +1,4 @@
-package com.capella.zipit;
+package com.capella.zipit.activity;
 
 /**
  * Created by capella on 22/04/15.
@@ -7,11 +7,10 @@ package com.capella.zipit;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.capella.zipit.R;
+import com.capella.zipit.objet.FileExplorerList_Item;
 
 import java.io.File;
 import java.text.DateFormat;
