@@ -17,6 +17,16 @@ public class Sms {
 	/*heure du msg*/
 	private String heure;
 
+	public int getSms_icon() {
+		return sms_icon;
+	}
+
+	public void setSms_icon(int sms_icon) {
+		this.sms_icon = sms_icon;
+	}
+
+	private int sms_icon;
+
 	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}
@@ -35,13 +45,14 @@ public class Sms {
 	 * @param heure du message
 	 * @param texte du message
 	 * */
-	public Sms(String num, String nom, String date, String heure, String msg) {
+	public Sms(String num, String nom, String date, String heure, String msg, int sms_icon) {
 		this.setNum(num);
 		this.setNom(nom);
 		this.setDate(date);
 		this.setHeure(heure);
 		this.setMsg(msg);
 		this.checked=false;
+		this.setSms_icon(sms_icon);
 	}
 	
 	

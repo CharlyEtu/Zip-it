@@ -62,4 +62,7 @@
     
     <!--   lire Sms envoyer activity   -->
     <string name="title_activity_sms_send">SMS envoyer</string>
+    <string name="sms_message">un message ...</string>
+    <string name="sms_date">24 Janvier 1991 00:00:01</string>
+    <string name="sms_name">+00212535608923</string>
 </resources>
