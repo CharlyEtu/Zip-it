@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -79,7 +80,44 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 		//Appel la fonction qui gère le long click sur les items
 		explorerSms_Long_Click_on_Item();
+
+		//Appel la fonction qui gère les click sur les items
+		explorerSms_Click_on_Item();
 		
+	}
+
+	private void explorerSms_Click_on_Item() {
+		//On récupère la listview
+		ListView list = (ListView) findViewById(R.id.SmsExplorer_Item_ListView);
+
+		//On met un listener sur les éléments de la listview
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			/**
+			 * Fonction qui gère le click sur un élément de la liste
+			 *
+			 * @param parent
+			 * @param view
+			 * @param position
+			 * @param id
+			 * @Override
+			 */
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Sms sms = sms_list.get(position);
+				Intent intent = new Intent(SmsExplorer_activity.this, Read_sms_activity.class);
+				if(sms.getNom()!=null){
+					intent.putExtra("from_name", sms.getNom());
+				}
+				else{
+					intent.putExtra("from_name", "Inconnu");
+				}
+				intent.putExtra("from_number", sms.getNum());
+				intent.putExtra("from_message", sms.getMsg());
+				intent.putExtra("from_date", "Reçu le "+sms.getDate()+" à "+sms.getHeure());
+				SmsExplorer_activity.this.startActivity(intent);
+
+			}
+		});
 	}
 
 	private void explorerSms_Long_Click_on_Item() {
@@ -479,7 +517,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			item_icon.setImageResource(currentItem.getSms_icon());
 
 			TextView item_name = (TextView) itemView.findViewById(R.id.item_name);
-			item_name.setText(currentItem.getNom());
+			item_name.setText(currentItem.getNum());
 
 			TextView item_extra = (TextView) itemView.findViewById(R.id.item_extra);
 			item_extra.setText(currentItem.getMsg());

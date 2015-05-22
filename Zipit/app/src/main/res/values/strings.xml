@@ -65,4 +65,10 @@
     <string name="sms_message">un message ...</string>
     <string name="sms_date">24 Janvier 1991 00:00:01</string>
     <string name="sms_name">+00212535608923</string>
+    <string name="title_activity_read_sms_activity">Read_sms_activity</string>
+    <string name="from_name">Inconnu</string>
+    <string name="from_number">06453278</string>
+    <string name="from_message">Message de mon ami</string>
+    <string name="from_date">Reçu le 14 Mai 2015 à 12:35:43</string>
+    <string name="button_compression_send">Envoyer compressé</string>
 </resources>
