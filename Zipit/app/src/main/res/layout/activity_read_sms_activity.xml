@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"  tools:context=".FileExplorerActivity">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/from_name"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:background="#27ae60"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:textSize="20dp"
+        android:text="@string/from_name"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/from_number"
+        android:singleLine="true"
+        android:layout_toRightOf="@+id/from_name"
+        android:background="#27ae60"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:textSize="20dp"
+        android:text="@string/from_number"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/from_name">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/from_message"
+            android:text="@string/from_message"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/from_message"
+            android:id="@+id/from_date"
+            android:text="@string/from_date"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/from_date"
+            android:id="@+id/btn_compression_send"
+            android:text="@string/button_compression_send"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/from_date"
+            android:id="@+id/btn_send"
+            android:layout_alignParentRight="true"
+            android:text="@string/button_send"
+            />
+
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
