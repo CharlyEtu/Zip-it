@@ -9,12 +9,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 import android.widget.Toolbar;
+import java.io.File;
 
 import com.capella.zipit.R;
 import com.capella.zipit.adapter.MyAdapter;
@@ -29,24 +33,26 @@ import com.capella.zipit.adapter.MyAdapter;
  */
 public class Menu_activity extends ActionBarActivity {
 
-	//First We Declare Titles And Icons For Our Navigation Drawer List View
-	//This Icons And Titles Are holded in an Array as you can see
 
+	//On déclare des tableaux pour les éléments de notre burger menu et les icônes
 	String TITLES[] = {"Repository","Settings","Infos"};
 	int ICONS[] = {R.drawable.ic_repo,R.drawable.ic_settings,R.drawable.ic_info};
 
-	RecyclerView mRecyclerView;                           // Declaring RecyclerView
-	RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
-	RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
-	DrawerLayout Drawer;                                  // Declaring DrawerLayout
 
+	//On déclare notre RecyclerView
+	RecyclerView mRecyclerView;
+
+	//On déclare l'adapteur pour le Recycler View
+	RecyclerView.Adapter mAdapter;
+
+	//On déclare un Layout Manager
+	RecyclerView.LayoutManager mLayoutManager;
+
+	//On déclare un DrawerLayout
+	DrawerLayout Drawer;
+
+	//On déclare un ActionBarDrawerToggle
 	ActionBarDrawerToggle mDrawerToggle;
-
-	//Similarly we Create a String Resource for the name and email in the header view
-	//And we also create a int resource for profile picture in the header view
-
-	String NAME = "Habchi Hamza";
-	String EMAIL = "hamza0habchi@gmail.com";
 
 	private android.support.v7.widget.Toolbar toolbar;
 
@@ -76,42 +82,100 @@ public class Menu_activity extends ActionBarActivity {
 		setSupportActionBar(toolbar);
 
 
-		mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView); // Assigning the RecyclerView Object to the xml View
+		//On assigne notre RecyclerView du XML à notre variable mRecyclerView
+		mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
 
-		mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
+		//On informe le système que notre liste d'objets est fixe
+		mRecyclerView.setHasFixedSize(true);
 
-		mAdapter = new MyAdapter(TITLES,ICONS,NAME,EMAIL);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
-		// And passing the titles,icons,header view name, header view email,
-		// and header view profile picture
+		//On crée un adapteur qui prend les titres et les icônes des éléments du burger menu
+		mAdapter = new MyAdapter(TITLES,ICONS);
 
-		mRecyclerView.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
-
-		mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
-
-		mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
+		//On passe l'adapteur au RecyclerView
+		mRecyclerView.setAdapter(mAdapter);
 
 
-		Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);        // Drawer object Assigned to the view
-		mDrawerToggle = new ActionBarDrawerToggle(this,Drawer,toolbar,R.string.openDrawer,R.string.closeDrawer){
+		final GestureDetector mGestureDetector = new GestureDetector(Menu_activity.this, new GestureDetector.SimpleOnGestureListener() {
 
+			@Override public boolean onSingleTapUp(MotionEvent e) {
+				return true;
+			}
+
+		});
+
+
+		mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+			@Override
+			public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+				View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+
+
+				if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
+
+
+					if(recyclerView.getChildPosition(child)==1){
+						Intent intent = new Intent(Menu_activity.this, FileExplorer_activity.class);/*instancition d'un intent (lien vers autre activité) => FileExplorer_activity.class*/
+						intent.putExtra("menuchoice", getFilesDir().getPath() + "/repository");/*affectation d'un parametre a l'intent*/
+						Menu_activity.this.startActivity(intent);/*lance l'intent*/
+						Drawer.closeDrawers();
+					}
+
+					return true;
+
+				}
+
+				return false;
+			}
+
+			@Override
+			public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+			}
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+		//On crée un LayoutManager comme étant linéaire
+		mLayoutManager = new LinearLayoutManager(this);
+
+		//On spécifie le LayoutManager du RecyclerView avec le le LayoutManager qu'on vient de créer
+		mRecyclerView.setLayoutManager(mLayoutManager);
+
+		//On récupère le DrawerLayout de notre fichier XML
+		Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
+
+		//Gestion de l'ouverture et de la fermeture du Drawer
+		mDrawerToggle = new ActionBarDrawerToggle(this,Drawer,toolbar,R.string.openDrawer,
+				R.string.closeDrawer){
+
+			//Une fois le Drawer ouvert
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				// code here will execute once the drawer is opened( As I dont want anything happened whe drawer is
-				// open I am not going to put anything here)
 			}
 
+			//Une fois le Drawer fermé
 			@Override
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
-				// Code here will execute once drawer is closed
 			}
 
+		};
 
+		//On définit le listener du Drawer au Drawer toggle qu'on vient de créer
+		Drawer.setDrawerListener(mDrawerToggle);
 
-		}; // Drawer Toggle Object Made
-		Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
-		mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
+		//On définit le DrawerToggle à syncState
+		mDrawerToggle.syncState();
 
 
 		//On récupère tous les boutons du menu
@@ -131,31 +195,6 @@ public class Menu_activity extends ActionBarActivity {
 		btn_contacts.setOnClickListener(contactsListener);
 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-	
 	
 	
 	/*listener sur bouton local*/
@@ -204,10 +243,6 @@ public class Menu_activity extends ActionBarActivity {
 			Menu_activity.this.startActivity(intent);/*lance l'intent*/
 		}
 	};
-	
-	
-	
-	
 	
 	
 	/*listener sur bouton PHOTOS*/

@@ -12,124 +12,149 @@ import com.capella.zipit.R;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-    private static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on
-    // IF the view under inflation and population is header or Item
+    //Définir deux variables pour spécifier le type soit un header soit un élément
+    private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
-    private String mNavTitles[]; // String Array to store the passed titles Value from MainActivity.java
-    private int mIcons[];       // Int Array to store the passed icons resource value from MainActivity.java
+    //Tableau des titres et des icônes des éléments du burger menu
+    private String mNavTitles[];
+    private int mIcons[];
 
-    private String name;        //String Resource for header View Name
-    private String email;       //String Resource for header view email
-
-
-    // Creating a ViewHolder which extends the RecyclerView View Holder
-    // ViewHolder are used to to store the inflated views in order to recycle them
-
+    /**
+     * Création d'une classe ViewHolder qui hérie de RecyclerView ViewHolder
+     * ViewHolder va enregistré les vues pour les recycler
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         int Holderid;
 
         TextView textView;
         ImageView imageView;
-        TextView Name;
-        TextView email;
 
-
-        public ViewHolder(View itemView,int ViewType) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
+        /**
+         * Constructeur ViewHolder qui prend une vue et le type de la vue comme paramètres
+         * @param itemView
+         * @param ViewType
+         */
+        public ViewHolder(View itemView,int ViewType) {
             super(itemView);
 
-
-            // Here we set the appropriate view in accordance with the the view type as passed when the holder object is created
-
+            //On met la vue suivant le type passé
+            //Si c'est un élément
             if(ViewType == TYPE_ITEM) {
-                textView = (TextView) itemView.findViewById(R.id.rowText); // Creating TextView object with the id of textView from item_row.xml
-                imageView = (ImageView) itemView.findViewById(R.id.rowIcon);// Creating ImageView object with the id of ImageView from item_row.xml
-                Holderid = 1;                                               // setting holder id as 1 as the object being populated are of type item row
+
+                //On récupère le textview de l'élément
+                textView = (TextView) itemView.findViewById(R.id.rowText);
+
+                //On récupère l'icône de l'élément
+                imageView = (ImageView) itemView.findViewById(R.id.rowIcon);
+
+                //On met la valeur du holder à 1 comme c'est un type élément
+                Holderid = 1;
             }
+
+            //Si c'est un header
             else{
 
-
-                Name = (TextView) itemView.findViewById(R.id.name);         // Creating Text View object from header.xml for name
-                email = (TextView) itemView.findViewById(R.id.email);       // Creating Text View object from header.xml for email
-                Holderid = 0;                                                // Setting holder id = 0 as the object being populated are of type header view
+                //On met la valeur du holder à 0 comme c'est un type header
+                Holderid = 0;
             }
         }
 
-
     }
 
+    /**
+     * Constructeur de la classer MyAdapter avec comme paramètres les titres et les icônes des
+     * éléments
+     * @param Titles
+     * @param Icons
+     */
+    public MyAdapter(String Titles[], int Icons[]){
 
-
-    public MyAdapter(String Titles[], int Icons[], String Name, String Email){ // MyAdapter Constructor with titles and icons parameter
-        // titles, icons, name, email are passed from the main activity as we
-        mNavTitles = Titles;                //have seen earlier
+        //Attribution des paramètres aux attributs
+        mNavTitles = Titles;
         mIcons = Icons;
-        name = Name;
-        email = Email;             //here we assign those passed values to the values we declared here
-        //in adapter
-
-
-
     }
 
 
-
-    //Below first we ovverride the method onCreateViewHolder which is called when the ViewHolder is
-    //Created, In this method we inflate the item_row.xml layout if the viewType is Type_ITEM or else we inflate header.xml
-    // if the viewType is TYPE_HEADER
-    // and pass it to the view holder
-
+    /**
+     * Méthode appelée lors de la création du ViewHolder
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        //Si c'est un type élément
         if (viewType == TYPE_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row,parent,false); //Inflating the layout
 
-            ViewHolder vhItem = new ViewHolder(v,viewType); //Creating ViewHolder and passing the object of type view
+            //On récupère la vue de l'élément
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row,parent,
+                    false);
 
-            return vhItem; // Returning the created object
+            //On crée le ViewHolder propre à l'élément
+            ViewHolder vhItem = new ViewHolder(v,viewType);
 
-            //inflate your layout and pass it to view holder
+            //On retourne le ViewHolder de l'élément créé
+            return vhItem;
 
-        } else if (viewType == TYPE_HEADER) {
+        }
 
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header,parent,false); //Inflating the layout
+        //Si c'est un header
+        else if (viewType == TYPE_HEADER) {
 
-            ViewHolder vhHeader = new ViewHolder(v,viewType); //Creating ViewHolder and passing the object of type view
+            //On récupère la vue du header
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header,parent,false);
 
+            //On crée le ViewHolder du header
+            ViewHolder vhHeader = new ViewHolder(v,viewType);
+
+            //On retourne le ViewHolder du header
             return vhHeader; //returning the object created
 
 
         }
+
+        //Dans tous les autres cas on retourne null
         return null;
 
     }
 
-    //Next we override a method which is called when the item in a row is needed to be displayed, here the int position
-    // Tells us item at which position is being constructed to be displayed and the holder id of the holder object tell us
-    // which view type is being created 1 for item row
-    @Override
-    public void onBindViewHolder(MyAdapter.ViewHolder holder, int position) {
-        if(holder.Holderid ==1) {                              // as the list view is going to be called after the header view so we decrement the
-            // position by 1 and pass it to the holder while setting the text and image
-            holder.textView.setText(mNavTitles[position - 1]); // Setting the Text with the array of our Titles
-            holder.imageView.setImageResource(mIcons[position -1]);// Settimg the image with array of our icons
-        }
-        else{
+    /**
+     * Méthode appelée quand on veut afficher les éléments du burger menu
+     * @param holder
+     * @param position
+     * @Override
+     */
 
-            holder.Name.setText(name);
-            holder.email.setText(email);
+    public void onBindViewHolder(MyAdapter.ViewHolder holder, int position) {
+
+        //Si c'est un élément
+        if(holder.Holderid ==1) {
+
+            //On attribue le texte et l'image de l'élément
+            holder.textView.setText(mNavTitles[position - 1]);
+            holder.imageView.setImageResource(mIcons[position -1]);
         }
     }
 
     // This method returns the number of items present in the list
+
+    /**
+     * Méthode qui retourne le nombre d'éléments du burger menu
+     * @return
+     */
     @Override
     public int getItemCount() {
-        return mNavTitles.length+1; // the number of items in the list will be +1 the titles including the header view.
+        return mNavTitles.length+1;
     }
 
-
-    // Witht the following method we check what type of view is being passed
+    /**
+     * Méthode qui récupère le type de l'élément du burger menu
+     * @param position
+     * @return
+     */
     @Override
     public int getItemViewType(int position) {
         if (isPositionHeader(position))
@@ -138,6 +163,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return TYPE_ITEM;
     }
 
+    /**
+     * Méthode qui spécifie suivant la position si c'est un header ou pas
+     * @param position
+     * @return
+     */
     private boolean isPositionHeader(int position) {
         return position == 0;
     }
