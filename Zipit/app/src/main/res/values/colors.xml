@@ -3,4 +3,6 @@
     <color name="menu_activity_background">#eeeeee</color>
     <color name="menu_activity_row_background">#ffffff</color>
     <color name="menu_activity_string_color">#0b8043</color>
+    <color name="ColorPrimary">#87d37c</color>
+    <color name="ColorPrimaryDark">#7abf70</color>
 </resources>

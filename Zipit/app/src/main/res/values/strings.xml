@@ -71,4 +71,14 @@
     <string name="from_message">Message de mon ami</string>
     <string name="from_date">Reçu le 14 Mai 2015 à 12:35:43</string>
     <string name="button_compression_send">Envoyer compressé</string>
+    <string name="title_activity_burger_menu_activity">burger_menu_activity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
 </resources>

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toolbar;
 
 import com.capella.zipit.R;
 
@@ -22,6 +23,8 @@ import com.capella.zipit.R;
  * compressé (compression de chaine  de caracteres). 
  */
 public class Menu_activity extends ActionBarActivity {
+
+	private android.support.v7.widget.Toolbar toolbar;
 
 	/*declaration de tous les boutons de la vue*/
 	private Button btn_local = null;
@@ -44,6 +47,9 @@ public class Menu_activity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu_activity);
+
+		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
+		setSupportActionBar(toolbar);
 
 		//On récupère tous les boutons du menu
 		btn_local = (Button) findViewById(R.id.btn_internal);
