@@ -4,36 +4,26 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.capella.zipit.R;
 
-public class Read_sms_activity extends ActionBarActivity {
+public class Infos_activity extends ActionBarActivity {
+
+    private android.support.v7.widget.Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_read_sms_activity);
+        setContentView(R.layout.activity_infos_activity);
 
-
-
-        TextView from_name = (TextView) findViewById(R.id.from_name);
-        TextView from_number = (TextView) findViewById(R.id.from_number);
-        TextView from_message = (TextView) findViewById(R.id.from_message);
-        TextView from_date = (TextView) findViewById(R.id.from_date);
-
-        from_name.setText(getIntent().getStringExtra("from_name"));
-        from_number.setText(getIntent().getStringExtra("from_number"));
-        from_message.setText(getIntent().getStringExtra("from_message"));
-        from_date.setText(getIntent().getStringExtra("from_date"));
-
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_read_sms_activity, menu);
-
+        getMenuInflater().inflate(R.menu.menu_infos_activity, menu);
         return true;
     }
 

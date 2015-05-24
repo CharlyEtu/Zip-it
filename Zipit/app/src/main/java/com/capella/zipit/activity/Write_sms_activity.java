@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.capella.zipit.R;
@@ -38,6 +39,8 @@ import com.capella.zipit.R;
  * aussi posseder l'application pr pouvoir decompressé le sms et pouvoir le lire
  */
 public class Write_sms_activity extends ActionBarActivity {
+
+	private android.support.v7.widget.Toolbar toolbar;
 	
 	/*numero du destinataire*/
 	private String numDestinataire ="";
@@ -55,9 +58,7 @@ public class Write_sms_activity extends ActionBarActivity {
 	private ArrayAdapter<String> adapter;
 	
 	/* Bouton envoyer*/
-	Button boutonEnvoyer;
-	/* Bouton envoyer*/
-	Button boutonEffacer;
+	ImageButton boutonEnvoyer;
 	
 	/*champ numero telephone*/ 
 	AutoCompleteTextView numTel;
@@ -76,10 +77,13 @@ public class Write_sms_activity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sms__w);
+
+		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
+		setSupportActionBar(toolbar);
 		
 		/*on recupere les vues boutons*/
-		boutonEnvoyer = (Button) findViewById(R.id.buttonEnvoyer);
-		boutonEffacer = (Button) findViewById(R.id.buttonEffacer);
+		boutonEnvoyer = (ImageButton) findViewById(R.id.buttonEnvoyer);
+
 		/*on recupere les champs texte*/
 		numTel = (AutoCompleteTextView) findViewById(R.id.editTextNumTel);
 		bodySms = (EditText) findViewById(R.id.editTextSMS);
@@ -97,7 +101,6 @@ public class Write_sms_activity extends ActionBarActivity {
 		
 		/*listener pour les bouttons envoyer et effacer */
 		boutonEnvoyer.setOnClickListener(envoyerListener);
-		boutonEffacer.setOnClickListener(effacerListener);
 		
 		/*lecture des contacts pr autocomplete*/
 		readContactData();
@@ -113,7 +116,7 @@ public class Write_sms_activity extends ActionBarActivity {
 		 * numtel et message envoi le sms
 		 * et reinitialise les champs textes
 		 * 
-		 * @param vue
+		 * @param v
 		 * @Override
 		 */
 		public void onClick(View v) {

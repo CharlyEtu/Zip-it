@@ -34,7 +34,7 @@ import java.util.List;
 
 public class FileExplorer_activity extends ActionBarActivity {
 
-	private View currentSelectedView;
+	private android.support.v7.widget.Toolbar toolbar;
 
 	List<String> checked_items = new ArrayList<String>();
 
@@ -58,6 +58,9 @@ public class FileExplorer_activity extends ActionBarActivity {
 
 		//On met dans l'activité le layout de l'exploreur de fichiers
         setContentView(R.layout.activity_file_explorer);
+
+		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
+		setSupportActionBar(toolbar);
 
 		if(getIntent().hasExtra("menuchoice")) {
 			menuchoice = getIntent().getStringExtra("menuchoice");

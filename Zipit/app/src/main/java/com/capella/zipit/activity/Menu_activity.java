@@ -35,8 +35,9 @@ public class Menu_activity extends ActionBarActivity {
 
 
 	//On déclare des tableaux pour les éléments de notre burger menu et les icônes
-	String TITLES[] = {"Repository","Settings","Infos"};
-	int ICONS[] = {R.drawable.ic_repo,R.drawable.ic_settings,R.drawable.ic_info};
+	String TITLES[] = {"Repository","Settings","Noter", "Infos"};
+	int ICONS[] = {R.drawable.ic_repo,R.drawable.ic_settings,R.drawable.ic_rate,
+			R.drawable.ic_info};
 
 
 	//On déclare notre RecyclerView
@@ -95,53 +96,6 @@ public class Menu_activity extends ActionBarActivity {
 		mRecyclerView.setAdapter(mAdapter);
 
 
-		final GestureDetector mGestureDetector = new GestureDetector(Menu_activity.this, new GestureDetector.SimpleOnGestureListener() {
-
-			@Override public boolean onSingleTapUp(MotionEvent e) {
-				return true;
-			}
-
-		});
-
-
-		mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-			@Override
-			public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-				View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-
-
-				if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
-
-
-					if(recyclerView.getChildPosition(child)==1){
-						Intent intent = new Intent(Menu_activity.this, FileExplorer_activity.class);/*instancition d'un intent (lien vers autre activité) => FileExplorer_activity.class*/
-						intent.putExtra("menuchoice", getFilesDir().getPath() + "/repository");/*affectation d'un parametre a l'intent*/
-						Menu_activity.this.startActivity(intent);/*lance l'intent*/
-						Drawer.closeDrawers();
-					}
-
-					return true;
-
-				}
-
-				return false;
-			}
-
-			@Override
-			public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-
-			}
-		});
-
-
-
-
-
-
-
-
-
-
 
 
 		//On crée un LayoutManager comme étant linéaire
@@ -193,6 +147,49 @@ public class Menu_activity extends ActionBarActivity {
 		btn_pictures.setOnClickListener(picturesListener);
 		btn_videos.setOnClickListener(videosListener);
 		btn_contacts.setOnClickListener(contactsListener);
+
+		final GestureDetector mGestureDetector = new GestureDetector(Menu_activity.this, new GestureDetector.SimpleOnGestureListener() {
+
+			@Override public boolean onSingleTapUp(MotionEvent e) {
+				return true;
+			}
+
+		});
+
+
+		mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+			@Override
+			public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+				View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+
+
+				if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
+
+
+					if (recyclerView.getChildPosition(child) == 1) {
+						Intent intent = new Intent(Menu_activity.this, FileExplorer_activity.class);/*instancition d'un intent (lien vers autre activité) => FileExplorer_activity.class*/
+						intent.putExtra("menuchoice", getFilesDir().getPath() + "/repository");/*affectation d'un parametre a l'intent*/
+						Menu_activity.this.startActivity(intent);/*lance l'intent*/
+						Drawer.closeDrawers();
+					}
+					if (recyclerView.getChildPosition(child) == 4) {
+						Intent intent = new Intent(Menu_activity.this, Infos_activity.class);
+						Menu_activity.this.startActivity(intent);
+
+					}
+
+					return true;
+
+				}
+
+				return false;
+			}
+
+			@Override
+			public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+			}
+		});
 
 	}
 	

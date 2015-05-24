@@ -1,88 +1,69 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@android:color/black" >
- 
-    <TextView
-        android:id="@+id/textViewNumTel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/numtel"
-        android:textColor="@android:color/white"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        />
- 
-    <AutoCompleteTextView
-        android:id="@+id/editTextNumTel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        />
-    
-  
-    <TextView
-        android:id="@+id/textViewSMS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/message"
-        android:textColor="@android:color/white"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:paddingTop="20dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        />
- 
-    <EditText
-        android:id="@+id/editTextSMS"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:lines="3"
-        android:gravity="top" 
-        android:textColor="@android:color/black"
-       	android:paddingTop="20dp"
-       	android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-       	android:paddingBottom="20dp"
-       	android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity_sms_w"
+    android:background="@drawable/d6de8e7cc1f8a0e11de5cafa94349216">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
         />
 
-    
-    
-    <Button
-        android:id="@+id/buttonEnvoyer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/envoyer" 
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        />
-    
-    <Button
-        android:id="@+id/buttonEffacer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/effacer" 
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        />
- 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tool_bar"
+        >
+
+        <AutoCompleteTextView
+            android:id="@+id/editTextNumTel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#737373"
+            android:hint="@string/write_sms_contact"
+            android:textColorHint="#bdc3c7"
+            android:background="#FFFF"
+            android:padding="10dp"
+            />
+
+        <View
+            android:layout_below="@+id/editTextNumTel"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"/>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/abc_action_bar_default_padding_material"
+            android:layout_marginRight="@dimen/abc_action_bar_default_padding_material"
+            android:layout_marginBottom="@dimen/abc_action_bar_default_padding_material">
+
+            <EditText android:id="@+id/editTextSMS"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_message"
+                android:textColorHint="#bdc3c7"
+                android:background="#FFFF"
+                android:padding="10dp"
+                />
+
+            <ImageButton
+                android:id="@+id/buttonEnvoyer"
+                android:background="@drawable/circle"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:text="@string/button_send"
+                android:src="@drawable/ic_send"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

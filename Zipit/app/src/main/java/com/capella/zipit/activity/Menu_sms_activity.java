@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.capella.zipit.R;
 
@@ -20,9 +21,11 @@ import com.capella.zipit.R;
 public class Menu_sms_activity extends ActionBarActivity {
 
 	/*declaration de tous les boutons de la vue*/
-	private Button btn_newSms = null;
+	private ImageButton btn_newSms = null;
 	private Button btn_inbox = null;
 	private Button btn_sendSms = null;
+
+	private android.support.v7.widget.Toolbar toolbar;
 	
 	/**
 	 * Fonction lancée lors de la création de l'activité: 
@@ -37,12 +40,14 @@ public class Menu_sms_activity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu_sms);
 
-		Log.d("Je suis rentré", "ko");
+		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
+		setSupportActionBar(toolbar);
 		
 		//On récupère tous les boutons du menu
-		btn_newSms = (Button) findViewById(R.id.btn_writeSms);
+		btn_newSms = (ImageButton) findViewById(R.id.btn_write_sms);
 		btn_inbox = (Button) findViewById(R.id.btn_inbox);
 		btn_sendSms = (Button) findViewById(R.id.btn_jesaispas);
+
 		
 		//on attribue un listener adapté aux vues
 		btn_newSms.setOnClickListener(newSmsListener);

@@ -36,7 +36,9 @@ import com.capella.zipit.tools.XmlFile;
  * elles donnes possibilité de S.A.V les SMS (reçu ou envoyer). 
  */
 public class SmsExplorer_activity extends ActionBarActivity {
-	
+
+	private android.support.v7.widget.Toolbar toolbar;
+
 	/*choix entre SMS envoyes ou recus*/
 	private String choix;
 	/*liste sms selectionner*/
@@ -68,6 +70,9 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 		//On met dans l'activité le layout de l'exploreur de fichiers
 		setContentView(R.layout.activity_sms_explorer);
+
+		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
+		setSupportActionBar(toolbar);
 
 		//Appel la fonction pour remplir notre liste de messages
 		populateSmsExplorerList();
@@ -348,7 +353,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 				Inbox_msg[pos]=msg;
 
 				sms_list.add(new Sms(Inbox_number[pos], Inbox_name[pos], Inbox_date[pos],
-						Inbox_type[pos], Inbox_msg[pos], R.drawable.folder));
+						Inbox_type[pos], Inbox_msg[pos], R.drawable.ic_read_sms));
 				pos +=1;
 
 			}
@@ -408,7 +413,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 				Inbox_msg[pos]=msg;
 				sms_list.add(new Sms(Inbox_number[pos], Inbox_name[pos], Inbox_date[pos],
-						Inbox_type[pos], Inbox_msg[pos], R.drawable.folder));
+						Inbox_type[pos], Inbox_msg[pos], R.drawable.ic_send_sms));
 				pos +=1;
 
 			}
@@ -472,7 +477,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 
 	/**
-	 * Classe interne
+	 * Classe interne'if' statement has empty body more... (Ctrl+
 	 */
 	private class SmsExplorer_Item_ListAdapter extends ArrayAdapter<Sms>{
 

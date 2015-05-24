@@ -6,11 +6,5 @@
           android:title="@string/action_settings"
           android:orderInCategory="100"
           app:showAsAction="never"/>
-      <item
-          android:id="@+id/action_compress"
-          android:orderInCategory="200"
-          android:title="Search"
-          android:icon="@drawable/ic_zip"
-          app:showAsAction="ifRoom"
-          ></item>
+
 </menu>

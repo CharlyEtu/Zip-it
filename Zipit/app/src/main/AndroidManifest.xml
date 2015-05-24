@@ -47,6 +47,10 @@
             android:name=".activity.Read_sms_activity"
             android:label="@string/title_activity_read_sms_activity" >
         </activity>
+        <activity
+            android:name=".activity.Infos_activity"
+            android:label="@string/title_activity_infos_activity" >
+        </activity>
     </application>
 
 </manifest>

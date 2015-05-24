@@ -1,76 +1,110 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"  tools:context=".FileExplorerActivity">
+    android:layout_height="match_parent"  tools:context=".Read_sms_activity">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/from_name"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:background="#27ae60"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="5dp"
-        android:textSize="20dp"
-        android:text="@string/from_name"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/from_number"
-        android:singleLine="true"
-        android:layout_toRightOf="@+id/from_name"
-        android:background="#27ae60"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:paddingRight="5dp"
-        android:textSize="20dp"
-        android:text="@string/from_number"
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/from_name">
+        android:layout_below="@+id/tool_bar">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/from_message"
-            android:text="@string/from_message"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/from_message"
-            android:id="@+id/from_date"
-            android:text="@string/from_date"/>
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/from_date"
-            android:id="@+id/btn_compression_send"
-            android:text="@string/button_compression_send"
-            />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/from_date"
-            android:id="@+id/btn_send"
+            android:id="@+id/from_number"
+            android:singleLine="true"
+            android:background="#27ae60"
+            android:paddingBottom="7dp"
             android:layout_alignParentRight="true"
-            android:text="@string/button_send"
+            android:paddingTop="8dp"
+            android:paddingRight="5dp"
+            android:textSize="16dp"
+            android:text="@string/from_number"
+            android:autoText="false" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/from_name"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:background="#27ae60"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:textSize="20dp"
+            android:layout_toLeftOf="@+id/from_number"
+            android:text="@string/from_name"
+
             />
 
 
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/from_name"
+            android:background="@drawable/d6de8e7cc1f8a0e11de5cafa94349216"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/from_message"
+                android:text="@string/from_message"
+                android:background="#FFF"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_below="@+id/from_message"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_margin="5dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/separator"
+                android:id="@+id/from_date"
+                android:text="@string/from_date"
+                android:layout_alignParentRight="true"
+                android:textSize="12dp"
+                android:textColor="#FFF"
+                />
+
+            <ImageButton
+                android:id="@+id/btn_compression_send"
+                android:background="@drawable/circle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="@string/button_send"
+                android:src="@drawable/ic_sms"
+                android:layout_below="@+id/from_date"
+                />
+
+            <ImageButton
+                android:id="@+id/btn_send"
+                android:background="@drawable/circle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="@string/button_send"
+                android:src="@drawable/ic_sms"
+                android:layout_below="@+id/from_date"
+                android:layout_alignParentRight="true"
+                />
+
+        </RelativeLayout>
 
     </RelativeLayout>
-
-
 
 </RelativeLayout>

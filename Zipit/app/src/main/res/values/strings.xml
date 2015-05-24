@@ -83,4 +83,8 @@
     <string name="action_example">Example action</string>
     <string name="openDrawer">Opened</string>
     <string name="closeDrawer">closed</string>
+    <string name="menu_zip">Compresser</string>
+    <string name="menu_unzip">Décompresser</string>
+    <string name="title_activity_infos_activity">Infos_activity</string>
+    <string name="write_sms_contact">Saisir le(s) destinataire(s)</string>
 </resources>
