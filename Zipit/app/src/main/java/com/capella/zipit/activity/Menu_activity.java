@@ -284,11 +284,11 @@ public class Menu_activity extends ActionBarActivity {
 			Menu_activity.this.startActivity(intent);/*lance l'intent*/
 		}
 	};
-	
-	
-	
-	
-	
+
+
+
+
+
 	/*listener sur bouton CONTACTS*/
 	private OnClickListener contactsListener = new View.OnClickListener() {
 		/**
@@ -296,12 +296,10 @@ public class Menu_activity extends ActionBarActivity {
 		 * @Override
 		 */
 		public void onClick(View v) {
-			Intent intent = new Intent(Menu_activity.this, FileExplorer_activity.class);/*instancition d'un intent (lien vers autre activité) =>FileExplorer_activity.class*/
-			//intent.putExtra("menuchoice", "/storage/extSdCard");/*affectation d'un parametre a l'intent*/
+			Intent intent = new Intent(Menu_activity.this, ContactExplorer_activity.class);/*instancition d'un intent (lien vers autre activité) =>ContactExplorer_activity.class*/
 			Menu_activity.this.startActivity(intent);/*lance l'intent*/
 		}
 	};
-
 	
 	
 	/**

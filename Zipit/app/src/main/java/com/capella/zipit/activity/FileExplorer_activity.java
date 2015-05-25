@@ -24,8 +24,10 @@ import android.widget.Toast;
 
 import com.capella.zipit.R;
 import com.capella.zipit.objet.FileExplorerList_Item;
+import com.capella.zipit.tools.Zipper;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +38,7 @@ public class FileExplorer_activity extends ActionBarActivity {
 
 	private android.support.v7.widget.Toolbar toolbar;
 
-	List<String> checked_items = new ArrayList<String>();
+	ArrayList<String> checked_items = new ArrayList<String>();
 
 	//Fichier courant
     private File currentDir;
@@ -58,6 +60,8 @@ public class FileExplorer_activity extends ActionBarActivity {
 
 		//On met dans l'activité le layout de l'exploreur de fichiers
         setContentView(R.layout.activity_file_explorer);
+
+
 
 		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
 		setSupportActionBar(toolbar);
@@ -118,6 +122,7 @@ public class FileExplorer_activity extends ActionBarActivity {
 		//Appel la fonction qui gère le long click sur les items
 		explorerFile_Long_Click_on_Item();
 
+		//Toast.makeText(getBaseContext(), currentDir.getAbsolutePath(), Toast.LENGTH_LONG).show();
     }
 
 	/**
@@ -294,7 +299,7 @@ public class FileExplorer_activity extends ActionBarActivity {
 				FileExplorerList_Item item_clicked = myItems.get(position);
 
 				//Technique pour ne pas garder une trace des séléctions de l'activité précédente
-				for(int i=0; i<myItems.size(); i++){
+				for (int i = 0; i < myItems.size(); i++) {
 					myItems.get(i).setChecked(false);
 				}
 
@@ -311,7 +316,7 @@ public class FileExplorer_activity extends ActionBarActivity {
 				String extra = item_clicked.getItem_path();
 
 				//Si l'item est un dossier
-				if(item_clicked.getItem_type() == 0){
+				if (item_clicked.getItem_type() == 0) {
 
 					//On déclare un intent (un argument qu'on passe entre les activités)
 					Intent intent;
@@ -333,8 +338,8 @@ public class FileExplorer_activity extends ActionBarActivity {
 				else {
 
 					//On affiche un message comme quoi c'est un fichier et qu'on ne peut l'ouvrir
-					Toast.makeText(getApplicationContext(), item_clicked.getItem_name()+" "
-							+getString(R.string.toast_message), Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), item_clicked.getItem_name() + " "
+							+ getString(R.string.toast_message), Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -358,7 +363,7 @@ public class FileExplorer_activity extends ActionBarActivity {
 
 				/*Si notre liste d'éléments cochés contient l'élément sur lequel on a fait un long
 				click*/
-				if(checked_items.contains(item_clicked.getItem_path())){
+				if (checked_items.contains(item_clicked.getItem_path())) {
 
 					//On supprime l'élément de la liste
 					checked_items.remove(item_clicked.getItem_path());
@@ -371,7 +376,7 @@ public class FileExplorer_activity extends ActionBarActivity {
 
 					//Message console
 					Log.i("Check", checked_items.toString());
-				}else{
+				} else {
 
 					//Ajout de l'élément à la liste des éléments cochés
 					checked_items.add(item_clicked.getItem_path());
@@ -390,16 +395,16 @@ public class FileExplorer_activity extends ActionBarActivity {
 				String selection_message;
 
 				//Si on a 0 ou 1 élément dans notre liste
-				if(checked_items.size() == 0 || checked_items.size() ==1){
+				if (checked_items.size() == 0 || checked_items.size() == 1) {
 
 					//Un message sans les s
-					selection_message = checked_items.size()+" élément séléctioné.";
+					selection_message = checked_items.size() + " élément séléctioné.";
 
 					//Sinon
-				}else{
+				} else {
 
 					//Un message avec les s
-					selection_message = checked_items.size()+" éléments séléctionés.";
+					selection_message = checked_items.size() + " éléments séléctionés.";
 				}
 
 				//On affiche le message à l'utilisateur via un toast
@@ -423,6 +428,13 @@ public class FileExplorer_activity extends ActionBarActivity {
         return true;
     }
 
+	public void after_zip(){
+		checked_items.clear();
+		Toast.makeText(getBaseContext(), "Compression effectuée", Toast.LENGTH_SHORT).show();
+		populateFileExplorerList(currentDir);
+		populate_FileExplorer_Item_ListView();
+	}
+
 	/**
 	 * Fonction qui gère l'appui sur des éléments du menu
 	 * @param item
@@ -439,6 +451,38 @@ public class FileExplorer_activity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+
+		if(id == R.id.action_zip){
+			Zipper zepi = new Zipper();
+			if(checked_items.size()>1){
+				Log.d("Debug >1 :" , getFilesDir()+"/repository/folders/"+currentDir.getName()+".zip");
+				try {
+					zepi.zip(checked_items, getFilesDir()+"/repository/folders/"+currentDir.getName()+".zip");
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				after_zip();
+			}else if (checked_items.size() == 1){
+
+				String name_zip = checked_items.get(0).replace(currentDir.getAbsolutePath()+"/", "");
+				String final_name="";
+				String [] tmp = name_zip.split("\\.");
+				for(int i=0; i <tmp.length-1; i++){
+					final_name = final_name+tmp[i];
+				}
+				Log.d("Debug ==1 :" , getFilesDir()+"/repository/folders/"+final_name+".zip" );
+				try {
+					zepi.zip(checked_items, getFilesDir() + "/repository/folders/" + final_name+".zip");
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				after_zip();
+			}else if (checked_items.size() == 0){
+				Toast.makeText(getBaseContext(), "Aucun élément séléctionné!", Toast.LENGTH_SHORT).show();
+			}
+		}
 
         return super.onOptionsItemSelected(item);
     }

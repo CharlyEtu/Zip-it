@@ -1,15 +1,12 @@
 package com.capella.zipit.activity;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -24,10 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.capella.zipit.R;
-import com.capella.zipit.adapter.InboxArrayAdapter;
-import com.capella.zipit.objet.FileExplorerList_Item;
 import com.capella.zipit.objet.Sms;
-import com.capella.zipit.tools.XmlFile;
+import com.capella.zipit.tools.XmlFileSMS;
+
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+
 
 
 /**
@@ -36,13 +37,12 @@ import com.capella.zipit.tools.XmlFile;
  * elles donnes possibilité de S.A.V les SMS (reçu ou envoyer). 
  */
 public class SmsExplorer_activity extends ActionBarActivity {
-
-	private android.support.v7.widget.Toolbar toolbar;
-
+	
 	/*choix entre SMS envoyes ou recus*/
 	private String choix;
 	/*liste sms selectionner*/
 	private ArrayList<Sms> liste_sms = new ArrayList<Sms>();
+	/*pr la vue*/
 	private ArrayList<Sms> sms_list = new ArrayList<Sms>();
 	
 	/*initialisation des buffers*/
@@ -71,9 +71,6 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		//On met dans l'activité le layout de l'exploreur de fichiers
 		setContentView(R.layout.activity_sms_explorer);
 
-		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
-		setSupportActionBar(toolbar);
-
 		//Appel la fonction pour remplir notre liste de messages
 		populateSmsExplorerList();
 
@@ -90,7 +87,15 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		explorerSms_Click_on_Item();
 		
 	}
-
+	
+	
+	
+	
+	/**
+	 * Methode explorerSms_Click_on_Item gere le clic simple
+	 * sur un sms : ouvre un lecteur de sms
+	 * 
+	 * */
 	private void explorerSms_Click_on_Item() {
 		//On récupère la listview
 		ListView list = (ListView) findViewById(R.id.SmsExplorer_Item_ListView);
@@ -118,13 +123,31 @@ public class SmsExplorer_activity extends ActionBarActivity {
 				}
 				intent.putExtra("from_number", sms.getNum());
 				intent.putExtra("from_message", sms.getMsg());
-				intent.putExtra("from_date", "Reçu le "+sms.getDate()+" à "+sms.getHeure());
+				
+				//traitement de la date
+				long l = Long.parseLong(sms.getDate());
+				Date d = new Date(l);
+				String date = DateFormat.getDateInstance(DateFormat.SHORT).format(d);
+				//traitement de l'heure
+				String heure = DateFormat.getTimeInstance().format(d).substring(0, 5);
+				
+				intent.putExtra("from_date", "Reçu le "+date+" à "+heure);
 				SmsExplorer_activity.this.startActivity(intent);
 
 			}
 		});
 	}
-
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Methode explorerSms_Long_Click_on_Item permet de gerer 
+	 * la selection d'un item ou plusieure items
+	 * */
 	private void explorerSms_Long_Click_on_Item() {
 		//On récupère la listview
 		ListView list = (ListView) findViewById(R.id.SmsExplorer_Item_ListView);
@@ -190,6 +213,10 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			}
 		});
 	}
+	
+	
+	
+	
 
 	/**
 	 * Fonction qui remplit la listview avec la liste des items
@@ -205,6 +232,11 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		list.setAdapter(adapter);
 	}
 
+	
+	/**
+	 * Methode de poplation de notre vue 
+	 * permet de recuperer les sms du device
+	 * */
 	private void populateSmsExplorerList() {
 
 		//sms_list.clear();
@@ -215,89 +247,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		}
 	}
 
-	/**
-	 * Methode permet de definir l'action a faire en cas de clic sur un item (sms)
-	 * de la liste des items(des SMS)
-	 * 
-	 * @param l vue
-	 * @param v
-	 * @param position
-	 * @param id
-	 * @Override
-	 */
-	/*
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		
-		super.onListItemClick(l, v, position, id);
-
-		View itemview = v;
-
-		//SMS recus
-		if(choix.equals("reçu")){
-			Sms sms = new Sms(Inbox_number[position], Inbox_name[position], Inbox_date[position],
-					Inbox_type[position], Inbox_msg[position], R.drawable.folder);
-			//pb de suppression 
-			//si le SMS a deja ete selectionner on le supprime
-			if(liste_sms.contains(sms)){
-				sms.setChecked(false);
-				liste_sms.remove(sms);
-				Toast.makeText(getBaseContext(), "Vous avez supprimer un sms nom ="+sms.getNom()+
-						" num="+sms.getNum()+" date="+sms.getDate()+" msg="+sms.getMsg(),
-						Toast.LENGTH_SHORT).show();
-			}
-			//dans le cas contraire en le rajout a notre liste
-			else{
-				sms.setChecked(true);
-				v.setBackgroundColor(Color.parseColor("#8027ae60"));
-				liste_sms.add(sms);
-				Toast.makeText(getBaseContext(), "Vous avez ajouter un sms nom ="+sms.getNom()+
-						" num="+sms.getNum()+" date="+sms.getDate()+" msg="+sms.getMsg(),
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-		//SMS envoyer
-		else if(choix.equals("envoyer")){
-			Sms sms = new Sms(Inbox_number[position], Inbox_name[position], Inbox_date[position],
-					Inbox_type[position], Inbox_msg[position], R.drawable.folder);
-			//pb de suppression 
-			//si le SMS a deja ete selectionner on le supprime
-			if(liste_sms.contains(sms)){
-				liste_sms.remove(sms);
-				Toast.makeText(getBaseContext(), "Vous avez supprimer un sms nom ="+sms.getNom()+
-						" num="+sms.getNum()+" date="+sms.getDate()+" msg="+sms.getMsg(),
-						Toast.LENGTH_SHORT).show();
-			}
-			//dans le cas contraire en le rajout a notre liste
-			else{
-				liste_sms.add(sms);
-				Toast.makeText(getBaseContext(), "Vous avez ajouter un sms nom ="+sms.getNom()+
-						" num="+sms.getNum()+" date="+sms.getDate()+" msg="+sms.getMsg(),
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-
-		
-//bout de code a utiliser pr restaurer les sms et les contacts
-		
-		//		Intent intent = new Intent(this,View.class);
-//		intent.putExtra("name", Inbox_name[position]);
-//		intent.putExtra("no",   Inbox_number[position]);
-//		intent.putExtra("date", Inbox_date[position]);
-//		intent.putExtra("time", Inbox_type[position]);
-//		
-//		intent.putExtra("msg",  Inbox_msg[position]);
-//		startActivity(intent);
-//		ContentValues values1 = new ContentValues();
-//		values1.put("address", "1239");
-//		values1.put("body", "message sent");
-//		getContentResolver().insert(Uri.parse("content://sms/sent"), values1);
-//		
-//		ContentValues values = new ContentValues();
-//		values.put("address", "12389");
-//		values.put("body", "message inbox");
-//		getContentResolver().insert(Uri.parse("content://sms/inbox"), values);
-	}*/
-
+	
 
 
 
@@ -313,6 +263,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 	 * Methode qui permet de recupere les SMS reçu par le biai d'une
 	 * requete sql
 	 * */
+	@SuppressWarnings("deprecation")
 	void Inbox_Read()
 	{
 		Uri mSmsinboxQueryUri = Uri.parse("content://sms/inbox");
@@ -324,7 +275,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		String[] columns = new String[] { "address", "person", "date", "body",
 		"type" };
 		if (cursor1.getCount() > 0) {
-			String count = Integer.toString(cursor1.getCount());
+			
 
 			while (cursor1.moveToNext()) {
 
@@ -334,21 +285,19 @@ public class SmsExplorer_activity extends ActionBarActivity {
 				String msg = cursor1.getString(cursor1.getColumnIndex(columns[3]));
 				String type = cursor1.getString(cursor1.getColumnIndex(columns[4]));
 
-				Inbox_name[pos]= name;  
-				Inbox_number[pos] =number; 
+				/*traitement l'abs du nom contact*/
+				if(name == null)
+					Inbox_name[pos]= "Inconnu";
+				else{
+					Inbox_name[pos]= nom_contact(name);
+				}
+				Inbox_number[pos] = number; 
+				
 
-				if(date!=null)
-				{
-					long l = Long.parseLong(date);
-					Date d = new Date(l);
-					Inbox_date[pos]=DateFormat.getDateInstance(DateFormat.LONG).format(d);
-					Inbox_type[pos]=DateFormat.getTimeInstance().format(d);
-				}
-				else
-				{
-					Inbox_date[pos]=date;
-					Inbox_type[pos]=type;
-				}
+
+				Inbox_date[pos]=date;
+				Inbox_type[pos]=type;
+
 
 				Inbox_msg[pos]=msg;
 
@@ -358,6 +307,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 			}
 		}
+		
 	}
 	
 	
@@ -374,6 +324,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 	 * Methode qui permet de recupere les SMS envoyés par le biai d'une
 	 * requete sql
 	 * */
+	@SuppressWarnings("deprecation")
 	void Send_item_Read()
 	{
 		Uri mSmsSend_itemQueryUri = Uri.parse("content://sms/sent");
@@ -385,7 +336,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		String[] columns = new String[] { "address", "person", "date", "body",
 		"type" };
 		if (cursor1.getCount() > 0) {
-			String count = Integer.toString(cursor1.getCount());
+			
 
 			while (cursor1.moveToNext()) {
 
@@ -394,22 +345,17 @@ public class SmsExplorer_activity extends ActionBarActivity {
 				String date = cursor1.getString(cursor1.getColumnIndex(columns[2]));
 				String msg = cursor1.getString(cursor1.getColumnIndex(columns[3]));
 				String type = cursor1.getString(cursor1.getColumnIndex(columns[4]));
-
-				Inbox_name[pos]= name;  
+				
+				/*traitement l'abs du nom contact*/
+				if(name == null)
+					Inbox_name[pos]= "Inconnu";
+				else
+					Inbox_name[pos]= nom_contact(name);
+				
 				Inbox_number[pos] =number;
 
-				if(date!=null)
-				{
-					long l = Long.parseLong(date);
-					Date d = new Date(l);
-					Inbox_date[pos]=DateFormat.getDateInstance(DateFormat.LONG).format(d);
-					Inbox_type[pos]=DateFormat.getTimeInstance().format(d);
-				}
-				else
-				{
-					Inbox_date[pos]=date;
-					Inbox_type[pos]=type;
-				}
+				Inbox_date[pos]=date;
+				Inbox_type[pos]=type;
 
 				Inbox_msg[pos]=msg;
 				sms_list.add(new Sms(Inbox_number[pos], Inbox_name[pos], Inbox_date[pos],
@@ -418,7 +364,19 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 			}
 		}
+		
 	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * Fonction qui ajoute des éléments à la bare de notre activité
@@ -427,12 +385,21 @@ public class SmsExplorer_activity extends ActionBarActivity {
 	 * @Override
 	 */
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        
         getMenuInflater().inflate(R.menu.menu_smsexplorer_activity, menu);
         return true;
     }
     
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	/**
 	 * Fonction qui gère l'appui sur des éléments du menu
 	 * @param item
@@ -448,14 +415,21 @@ public class SmsExplorer_activity extends ActionBarActivity {
         	/*si SMS reçu*/
         	if(choix.equals("reçu")){
         		/*generer xml contenant sms selectionnés*/
-	            XmlFile x = new XmlFile(liste_sms, "/mnt/sdcard/donne_preso/SMS_RECU.xml", "sms_R");
-	            x.creer_ficher_xml();
+	            XmlFileSMS x = new XmlFileSMS(liste_sms, "/mnt/sdcard/donne_preso/SMS_RECU.xml", "sms_R");
+	            x.ecrire_sms_xml();
+	            
+	            /*COMPRESSION*/
+	            /*suppression xml*/
+	            
         	}
         	/*Si SMS envoyés*/
         	else if(choix.equals("envoyer")){
         		/*generer xml contenant sms selectionnés*/
-        		XmlFile x = new XmlFile(liste_sms, "/mnt/sdcard/donne_preso/SMS_ENVOYER.xml", "sms_W");
-	            x.creer_ficher_xml();
+        		XmlFileSMS x = new XmlFileSMS(liste_sms, "/mnt/sdcard/donne_preso/SMS_ENVOYER.xml", "sms_W");
+	            x.ecrire_sms_xml();
+	            
+	            /*COMPRESSION*/
+	            /*suppression xml*/
         	}
         	return true;
         }
@@ -463,7 +437,18 @@ public class SmsExplorer_activity extends ActionBarActivity {
         else if(id == R.id.action_lire){
         	
         	if(choix.equals("reçu")){
-	            // AFINIR
+        		/*teeste inverse*/
+        		
+        		/*liste sms a restaurer*/
+        		ArrayList<Sms> liste_sms_restauration = new ArrayList<Sms>();
+        		XmlFileSMS y = new XmlFileSMS(liste_sms_restauration, "/mnt/sdcard/donne_preso/SMS_RECU.xml");
+        		y.lire_sms_xml();
+        		Log.d("XML", "Lecture du xml");
+        		
+        		restaure_Sms(liste_sms_restauration);
+
+
+        		/*FIN teeste*/
         	}
         	else if(choix.equals("envoyer")){
         		// AFINIR
@@ -476,8 +461,12 @@ public class SmsExplorer_activity extends ActionBarActivity {
     }
 
 
+    
+    
+    
+    
 	/**
-	 * Classe interne'if' statement has empty body more... (Ctrl+
+	 * Classe interne
 	 */
 	private class SmsExplorer_Item_ListAdapter extends ArrayAdapter<Sms>{
 
@@ -505,6 +494,8 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 			//Être certain qu'on aura une vue sur laquelle on va bosser
 			View itemView = convertView;
+			
+			
 
 			//Si on a pas de vue
 			if(itemView == null){
@@ -522,14 +513,41 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			item_icon.setImageResource(currentItem.getSms_icon());
 
 			TextView item_name = (TextView) itemView.findViewById(R.id.item_name);
-			item_name.setText(currentItem.getNum());
+			item_name.setText(currentItem.getNom()+" ("+currentItem.getNum()+")");
 
 			TextView item_extra = (TextView) itemView.findViewById(R.id.item_extra);
-			item_extra.setText(currentItem.getMsg());
+			
+			
+			//traitement de la date
+			long l = Long.parseLong(currentItem.getDate());
+			Date d = new Date(l);
+			String date = DateFormat.getDateInstance(DateFormat.SHORT).format(d);
+			//traitement de l'heure
+			String heure = DateFormat.getTimeInstance().format(d).substring(0, 5);
+			
 
 			TextView item_date = (TextView) itemView.findViewById(R.id.item_date);
-			item_date.setText(currentItem.getDate());
+			
+			//Si SMS reçu ajourd'hui
+			if(date.equals(DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()))){
+				item_date.setText(heure);
+				//Traitement de l'aperçu du message
+				if(currentItem.getMsg().length() > 30)
+					item_extra.setText(currentItem.getMsg().substring(0, 30)+"...");
+				else
+					item_extra.setText(currentItem.getMsg());
 
+			}
+			else{
+				item_date.setText(date+" "+heure);
+				//Traitement de l'aperçu du message
+				if(currentItem.getMsg().length() > 19)
+					item_extra.setText(currentItem.getMsg().substring(0, 19)+"...");
+				else
+					item_extra.setText(currentItem.getMsg());
+				
+			}
+				
 			if(currentItem.isChecked()){
 				itemView.setBackgroundColor(Color.parseColor("#8027ae60"));
 			}else{
@@ -540,6 +558,51 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			return itemView;
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	void restaure_Sms(ArrayList<Sms> Sms_R_restauration){
+		ContentValues values = new ContentValues();
+		
+		for(int i = 0 ; i < Sms_R_restauration.size() ; i++){
+			Log.d("SMS n° "+i+": ", "Msg : "+Sms_R_restauration.get(i).getMsg());
+			values.put("address", Sms_R_restauration.get(i).getNum());
+			values.put("person", Sms_R_restauration.get(i).getNom());
+			values.put("date", Sms_R_restauration.get(i).getDate());
+			values.put("body", Sms_R_restauration.get(i).getMsg());
+			
+			values.put("type", Sms_R_restauration.get(i).getHeure());
+			getContentResolver().insert(Uri.parse("content://sms/inbox"), values);
+		}
+		
+	}
+	
+	String nom_contact(String id){
+		
+		  String contactName = null;
+		  
+	        // querying contact data store
+	        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, ContactsContract.Contacts._ID + " = ?", new String[]{id}, null);
+	 
+	        if (cursor.moveToFirst()) {
+	 
+	            // DISPLAY_NAME = The display name for the contact.
+	            // HAS_PHONE_NUMBER =   An indicator of whether this contact has at least one phone number.
+	 
+	            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+	        }
+	 
+	        cursor.close();
+	 
+	        Log.d("TAG", "Contact Name: " + contactName);
+	        return contactName;
+   }
+	
 
 
 }

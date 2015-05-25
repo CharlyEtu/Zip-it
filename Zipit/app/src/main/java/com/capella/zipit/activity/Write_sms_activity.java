@@ -39,8 +39,6 @@ import com.capella.zipit.R;
  * aussi posseder l'application pr pouvoir decompressé le sms et pouvoir le lire
  */
 public class Write_sms_activity extends ActionBarActivity {
-
-	private android.support.v7.widget.Toolbar toolbar;
 	
 	/*numero du destinataire*/
 	private String numDestinataire ="";
@@ -77,13 +75,9 @@ public class Write_sms_activity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sms__w);
-
-		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
-		setSupportActionBar(toolbar);
 		
 		/*on recupere les vues boutons*/
 		boutonEnvoyer = (ImageButton) findViewById(R.id.buttonEnvoyer);
-
 		/*on recupere les champs texte*/
 		numTel = (AutoCompleteTextView) findViewById(R.id.editTextNumTel);
 		bodySms = (EditText) findViewById(R.id.editTextSMS);
@@ -105,6 +99,11 @@ public class Write_sms_activity extends ActionBarActivity {
 		/*lecture des contacts pr autocomplete*/
 		readContactData();
 		
+		if(getIntent().hasExtra("desinataire")){
+			numDestinataire = getIntent().getStringExtra("desinataire");
+			numTel.setText(numDestinataire);
+		}
+		
 	}
 	
 	/*listener sur bouton envoyer*/
@@ -116,19 +115,27 @@ public class Write_sms_activity extends ActionBarActivity {
 		 * numtel et message envoi le sms
 		 * et reinitialise les champs textes
 		 * 
-		 * @param v
+		 * @param vue
 		 * @Override
 		 */
 		public void onClick(View v) {
 
-			if(numDestinataire.contentEquals(""))
+			if(numDestinataire.equals(""))
 				numDestinataire = numTel.getText().toString();
 
 			String Texto = bodySms.getText().toString();
-			sendSMS(numDestinataire, Texto);
+			if(numDestinataire.equals("")){
+				Toast.makeText(getBaseContext(), "Aucun destinataire selectionné",Toast.LENGTH_SHORT).show();
+			}
+			else if(Texto.equals(""))
+				Toast.makeText(getBaseContext(), "Message vide",Toast.LENGTH_SHORT).show();
+			else{
+				sendSMS(numDestinataire, Texto);
+				bodySms.setText("");
+				numTel.setText("");
+			}
 
-			bodySms.setText("");
-			numTel.setText("");
+			
 
 		}
 	};
@@ -231,12 +238,12 @@ public class Write_sms_activity extends ActionBarActivity {
 	                case Activity.RESULT_OK:
 	                    Toast.makeText(getBaseContext(), "SMS envoyer avec succes",Toast.LENGTH_SHORT).show();
 	                    break;
-	                /*erreur generic*/
+	                /*erreur : generic*/
 	                case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 	                    Toast.makeText(getBaseContext(), "Generic failure",Toast.LENGTH_SHORT).show();
 	                    finish();
 	                    break;
-	                /*erreur pas de service*/
+	                /*erreur: pas de service*/
 	                case SmsManager.RESULT_ERROR_NO_SERVICE:
 	                    Toast.makeText(getBaseContext(), "Pas de service",Toast.LENGTH_SHORT).show();
 	                    finish();
@@ -246,7 +253,7 @@ public class Write_sms_activity extends ActionBarActivity {
 	                    Toast.makeText(getBaseContext(), "Null PDU",Toast.LENGTH_SHORT).show();
 	                    finish();
 	                    break;
-	                /*pas de reseau*/
+	                /*erreur : pas de reseau*/
 	                case SmsManager.RESULT_ERROR_RADIO_OFF:
 	                    Toast.makeText(getBaseContext(), "Mode avion",Toast.LENGTH_SHORT).show();
 	                    finish();
@@ -298,7 +305,7 @@ public class Write_sms_activity extends ActionBarActivity {
 	}
 	
 	
-	 // Read phone contact name and phone numbers 
+	 
 	/**
 	 * Methode permet de lire les contacts et leurs 
 	 * numero de telephone

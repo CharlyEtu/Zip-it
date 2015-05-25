@@ -90,4 +90,5 @@
     <string name="repository"><![CDATA[Repository >]]></string>
     <string name="videos"><![CDATA[Vidéos >]]></string>
     <string name="photos"><![CDATA[Photos >]]></string>
+    <string name="title_activity_contact_explorer_activity">Contacts</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.capella.zipit.objet;
 
-/**
 
+/**
  * La classe Sms permet de materielliser un sms
  * avec tous les attribues qui vont avec 
  * num, nom, date, heure, message
@@ -55,6 +55,26 @@ public class Sms {
 		this.setSms_icon(sms_icon);
 	}
 	
+	
+	
+	
+	
+	/**
+	 * Constructeur d'un message 
+	 * 
+	 * @param numero telephone
+	 * @param nom du destinataire
+	 * @param date du message
+	 * @param heure du message
+	 * @param texte du message
+	 * */
+	public Sms(String num, String nom, String date, String heure, String msg) {
+		this.setNum(num);
+		this.setNom(nom);
+		this.setDate(date);
+		this.setHeure(heure);
+		this.setMsg(msg);
+	}
 	
 	/**
 	 * Getteur getNum recupere le numero de telephone
