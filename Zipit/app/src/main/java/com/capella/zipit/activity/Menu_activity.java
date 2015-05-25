@@ -77,7 +77,21 @@ public class Menu_activity extends ActionBarActivity {
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_menu_activity);
+
+
+
+
+		Boolean isSDPresent = new File("/storage/extSdCard").canRead();
+
+
+		if(isSDPresent){
+			setContentView(R.layout.activity_menu_activity);
+			btn_sd = (Button) findViewById(R.id.btn_sd);
+			btn_sd.setOnClickListener(sdListener);
+		}else{
+			setContentView(R.layout.activity_menu_activity_no_sd);
+		}
+
 
 		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
 		setSupportActionBar(toolbar);
@@ -134,7 +148,7 @@ public class Menu_activity extends ActionBarActivity {
 
 		//On récupère tous les boutons du menu
 		btn_local = (Button) findViewById(R.id.btn_internal);
-		btn_sd = (Button) findViewById(R.id.btn_sd);
+
 		btn_sms = (Button) findViewById(R.id.btn_sms);
 		btn_pictures = (Button) findViewById(R.id.btn_pictures);
 		btn_videos = (Button) findViewById(R.id.btn_videos);
@@ -142,7 +156,6 @@ public class Menu_activity extends ActionBarActivity {
 
 		//on attribue un listener adapté aux vues
 		btn_local.setOnClickListener(localListener);
-		btn_sd.setOnClickListener(sdListener);
 		btn_sms.setOnClickListener(smsListener);
 		btn_pictures.setOnClickListener(picturesListener);
 		btn_videos.setOnClickListener(videosListener);

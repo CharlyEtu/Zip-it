@@ -94,24 +94,22 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.2"
+                    android:layout_weight="1"
                     android:gravity="center"
                     >
 
                     <Button
                         android:id="@+id/btn_sms"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:text="@string/sms"
-                        android:paddingTop="10dp"
+                        android:paddingLeft="10dp"
                         android:textColor="@color/menu_activity_string_color"
                         android:background="@color/menu_activity_row_background"
-                        android:drawableTop="@drawable/read_sms"
-                        android:layout_marginLeft="2.5dp"
+                        android:drawableLeft="@drawable/read_sms"
                         />
-
 
                 </TableRow>
 
@@ -136,10 +134,10 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:text="@string/picture_explorer_button"
-                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:textColor="@color/menu_activity_string_color"
                         android:background="@color/menu_activity_row_background"
-                        android:drawableLeft="@drawable/pictures"
+                        android:drawableRight="@drawable/pictures"
                         />
 
 
@@ -166,10 +164,10 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:text="@string/video_explorer_button"
-                        android:paddingRight="10dp"
+                        android:paddingLeft="10dp"
                         android:textColor="@color/menu_activity_string_color"
                         android:background="@color/menu_activity_row_background"
-                        android:drawableRight="@drawable/videos"
+                        android:drawableLeft="@drawable/videos"
                         />
 
                 </TableRow>
@@ -195,10 +193,10 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:text="@string/contacts_explorer_button"
-                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:textColor="@color/menu_activity_string_color"
                         android:background="@color/menu_activity_row_background"
-                        android:drawableLeft="@drawable/contacts_j"
+                        android:drawableRight="@drawable/contacts_j"
                         />
 
                 </TableRow>

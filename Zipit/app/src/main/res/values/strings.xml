@@ -87,4 +87,7 @@
     <string name="menu_unzip">Décompresser</string>
     <string name="title_activity_infos_activity">Infos_activity</string>
     <string name="write_sms_contact">Saisir le(s) destinataire(s)</string>
+    <string name="repository"><![CDATA[Repository >]]></string>
+    <string name="videos"><![CDATA[Vidéos >]]></string>
+    <string name="photos"><![CDATA[Photos >]]></string>
 </resources>

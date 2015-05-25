@@ -9,15 +9,10 @@ import com.capella.zipit.R;
 
 public class Infos_activity extends ActionBarActivity {
 
-    private android.support.v7.widget.Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infos_activity);
-
-        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
     }
 
     @Override

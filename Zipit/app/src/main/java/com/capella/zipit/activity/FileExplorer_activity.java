@@ -62,6 +62,9 @@ public class FileExplorer_activity extends ActionBarActivity {
 		toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
 		setSupportActionBar(toolbar);
 
+		//Récupère le textview qui affiche le chemin de l'exploreur
+		TextView path = (TextView) findViewById(R.id.path);
+
 		if(getIntent().hasExtra("menuchoice")) {
 			menuchoice = getIntent().getStringExtra("menuchoice");
 
@@ -78,12 +81,22 @@ public class FileExplorer_activity extends ActionBarActivity {
 				pathbegin.setText(R.string.pathsd);
 
 				//Si c'est le chemin du stockage interne
+			} else if (menuchoice.equalsIgnoreCase(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures")){
+
+				pathbegin.setText(R.string.photos);
+			} else if (menuchoice.equalsIgnoreCase(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Movies")){
+
+				pathbegin.setText(R.string.videos);
 			} else if (menuchoice.equalsIgnoreCase(Environment.getExternalStorageDirectory().
 					getAbsolutePath())) {
 
 				//On met dans le pathbegin Stockage Interne
 				pathbegin.setText(R.string.pathlocal);
+			}  else if(menuchoice.equalsIgnoreCase(getFilesDir().getPath() + "/repository")){
+
+				pathbegin.setText(R.string.repository);
 			}
+
 		}
 
 		//Si l'activité admet un intent du nom path
@@ -123,17 +136,55 @@ public class FileExplorer_activity extends ActionBarActivity {
 		TextView path = (TextView) findViewById(R.id.path);
 
 		//Réecriture du chemin des fichiers
-		if(currentDir.getAbsolutePath().equalsIgnoreCase("/storage/extSdCard")){
+		if(currentDir.getAbsolutePath().equalsIgnoreCase
+				(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures")){
 			path.setText("");
-		} else if(currentDir.getAbsolutePath().equalsIgnoreCase
-				(Environment.getExternalStorageDirectory().getAbsolutePath())){
+		}
+		else if(currentDir.getAbsolutePath().contains
+				(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/")){
+			path.setText(currentDir.getAbsolutePath().replace
+					(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/", ""));
+		}
+
+
+		else if(currentDir.getAbsolutePath().equalsIgnoreCase
+				(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Movies")){
+			path.setText("");
+		} else if(currentDir.getAbsolutePath().contains
+				(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Movies/")){
+			path.setText(currentDir.getAbsolutePath().replace
+					(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Movies/", ""));
+		}
+
+		else if(currentDir.getAbsolutePath().equalsIgnoreCase("/storage/extSdCard")){
 			path.setText("");
 		} else if(currentDir.getAbsolutePath().contains("/storage/extSdCard")){
 			path.setText(currentDir.getAbsolutePath().replace("/storage/extSdCard/", ""));
-		} else if(currentDir.getAbsolutePath().contains
+		}
+
+		else if(currentDir.getAbsolutePath().equalsIgnoreCase
+				(Environment.getExternalStorageDirectory().getAbsolutePath())){
+			path.setText("");
+		}  else if(currentDir.getAbsolutePath().contains
 				(Environment.getExternalStorageDirectory().getAbsolutePath())){
 			path.setText(currentDir.getAbsolutePath().replace
 					(Environment.getExternalStorageDirectory().getAbsolutePath()+"/", ""));
+		}
+
+
+
+
+
+
+
+
+		else if(currentDir.getAbsolutePath().equalsIgnoreCase
+				(getFilesDir().getPath() + "/repository")){
+			path.setText("");
+		} else if(currentDir.getAbsolutePath().contains
+				(getFilesDir().getPath() + "/repository")){
+			path.setText(currentDir.getAbsolutePath().replace
+					(getFilesDir().getPath() + "/repository/", ""));
 		}
 
 		//On vide la liste des items
@@ -199,15 +250,6 @@ public class FileExplorer_activity extends ActionBarActivity {
 				myItems.add(new FileExplorerList_Item(item.getName(), item.length()+" Byte",
 						date_modified, item.getAbsolutePath(), 1, R.drawable.document));
 			}
-		}
-
-		//Si notre dossier courant n'a pas le nom du stockage interne du téléphone ou de la carte SD
-		if(!dir.getName().equalsIgnoreCase(Environment.getExternalStorageDirectory().getName())
-				&& !dir.getAbsolutePath().equalsIgnoreCase("/storage/extSdCard")){
-
-			//Ajouter un élément à la tête de la liste qui a le chemin du parent du fichier courant
-			myItems.add(0, new FileExplorerList_Item("..", "Parent","",
-					currentDir.getParentFile().getPath(), 0, R.drawable.parent1 ));
 		}
 
     }

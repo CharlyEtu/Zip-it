@@ -85,18 +85,18 @@
             <ImageButton
                 android:id="@+id/btn_compression_send"
                 android:background="@drawable/circle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:text="@string/button_send"
-                android:src="@drawable/ic_sms"
+                android:src="@drawable/ic_sms_zip"
                 android:layout_below="@+id/from_date"
                 />
 
             <ImageButton
                 android:id="@+id/btn_send"
                 android:background="@drawable/circle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:text="@string/button_send"
                 android:src="@drawable/ic_sms"
                 android:layout_below="@+id/from_date"
