@@ -435,6 +435,18 @@ public class FileExplorer_activity extends ActionBarActivity {
 		populate_FileExplorer_Item_ListView();
 	}
 
+	public void delete_checkeditems(){
+		for (int i=0; i< checked_items.size(); i++)
+		{
+			File file = new File(checked_items.get(i));
+			file.delete();
+		}
+		checked_items.clear();
+		Toast.makeText(getBaseContext(), "Suppression effectuée", Toast.LENGTH_SHORT).show();
+		populateFileExplorerList(currentDir);
+		populate_FileExplorer_Item_ListView();
+	}
+
 	/**
 	 * Fonction qui gère l'appui sur des éléments du menu
 	 * @param item
@@ -482,6 +494,10 @@ public class FileExplorer_activity extends ActionBarActivity {
 			}else if (checked_items.size() == 0){
 				Toast.makeText(getBaseContext(), "Aucun élément séléctionné!", Toast.LENGTH_SHORT).show();
 			}
+		}
+
+		if(id == R.id.action_delete){
+			delete_checkeditems();
 		}
 
         return super.onOptionsItemSelected(item);

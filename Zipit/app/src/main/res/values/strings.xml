@@ -91,4 +91,5 @@
     <string name="videos"><![CDATA[Vidéos >]]></string>
     <string name="photos"><![CDATA[Photos >]]></string>
     <string name="title_activity_contact_explorer_activity">Contacts</string>
+    <string name="menu_delete">Supprimer</string>
 </resources>
