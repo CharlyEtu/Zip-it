@@ -62,15 +62,6 @@ public class Splash_activity extends Activity {
 			//Créer la racine du repository
 			repository.mkdir();
 
-			//Définir le chemin pour le sous-dossier des fichiers
-			File repo_files = new File(repository.getAbsolutePath()+"/files");
-
-			//S'il n'existe pas
-			if(!repo_files.exists()){
-
-				//On le crée
-				repo_files.mkdir();
-			}
 
 			//Définir le chemin pour le sous-dossier des dossiers
 			File repo_folder = new File(repository.getAbsolutePath()+"/folders");
@@ -124,13 +115,7 @@ public class Splash_activity extends Activity {
 
 		}
 
-		//Si le repository existe
-		else{
 
-			//Affichage d'un message comme quoi le repo est déjà crée
-			/*Toast.makeText(getApplicationContext(), "Already created",
-					Toast.LENGTH_LONG).show();*/
-		}
 	}
 
 }

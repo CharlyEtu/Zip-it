@@ -1,12 +1,21 @@
 package com.capella.zipit.activity;
 
-import android.content.ContentValues;
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.ContactsContract.PhoneLookup;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -23,10 +32,7 @@ import android.widget.Toast;
 import com.capella.zipit.R;
 import com.capella.zipit.objet.Sms;
 import com.capella.zipit.tools.XmlFileSMS;
-
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import com.capella.zipit.tools.Zipper;
 
 
 
@@ -37,14 +43,14 @@ import java.util.Date;
  * elles donnes possibilité de S.A.V les SMS (reçu ou envoyer). 
  */
 public class SmsExplorer_activity extends ActionBarActivity {
-	
+
 	/*choix entre SMS envoyes ou recus*/
 	private String choix;
 	/*liste sms selectionner*/
 	private ArrayList<Sms> liste_sms = new ArrayList<Sms>();
 	/*pr la vue*/
 	private ArrayList<Sms> sms_list = new ArrayList<Sms>();
-	
+
 	/*initialisation des buffers*/
 	private String[] Inbox_name=new String[4000],
 			Inbox_number=new String[4000],
@@ -53,18 +59,18 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			Inbox_msg=new String[4000];
 
 	int pos=0;
-	
+
 	/**
 	 * Fonction lancée lors de la création de l'activité: 
 	 * on va dans cette methode recuperer le choix si choix = reçu
 	 * alors on liste les sms recus.
 	 * si choix = envoyer on liste les sms envoyes
-	 * 
+	 *
 	 * @param savedInstanceState
 	 * @Override
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		choix = getIntent().getStringExtra("mode");
 
@@ -85,16 +91,16 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 		//Appel la fonction qui gère les click sur les items
 		explorerSms_Click_on_Item();
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Methode explorerSms_Click_on_Item gere le clic simple
 	 * sur un sms : ouvre un lecteur de sms
-	 * 
+	 *
 	 * */
 	private void explorerSms_Click_on_Item() {
 		//On récupère la listview
@@ -123,27 +129,28 @@ public class SmsExplorer_activity extends ActionBarActivity {
 				}
 				intent.putExtra("from_number", sms.getNum());
 				intent.putExtra("from_message", sms.getMsg());
-				
+
+
 				//traitement de la date
 				long l = Long.parseLong(sms.getDate());
 				Date d = new Date(l);
 				String date = DateFormat.getDateInstance(DateFormat.SHORT).format(d);
 				//traitement de l'heure
 				String heure = DateFormat.getTimeInstance().format(d).substring(0, 5);
-				
+
 				intent.putExtra("from_date", "Reçu le "+date+" à "+heure);
 				SmsExplorer_activity.this.startActivity(intent);
 
 			}
 		});
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	/**
 	 * Methode explorerSms_Long_Click_on_Item permet de gerer 
 	 * la selection d'un item ou plusieure items
@@ -213,10 +220,10 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			}
 		});
 	}
-	
-	
-	
-	
+
+
+
+
 
 	/**
 	 * Fonction qui remplit la listview avec la liste des items
@@ -232,7 +239,7 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		list.setAdapter(adapter);
 	}
 
-	
+
 	/**
 	 * Methode de poplation de notre vue 
 	 * permet de recuperer les sms du device
@@ -247,18 +254,18 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		}
 	}
 
-	
 
 
 
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
 	/**
 	 * Methode qui permet de recupere les SMS reçu par le biai d'une
 	 * requete sql
@@ -269,31 +276,35 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		Uri mSmsinboxQueryUri = Uri.parse("content://sms/inbox");
 		Cursor cursor1 = getContentResolver().query(
 				mSmsinboxQueryUri,
-				new String[] { "_id", "thread_id", "address", "person", "date",
+				new String[] { "_id", "thread_id", "address", "date",
 						"body", "type" }, null, null, null);
 		startManagingCursor(cursor1);
-		String[] columns = new String[] { "address", "person", "date", "body",
-		"type" };
+		String[] columns = new String[] { "address", "date", "body",
+				"type" };
 		if (cursor1.getCount() > 0) {
-			
+
 
 			while (cursor1.moveToNext()) {
 
 				String number = cursor1.getString(cursor1.getColumnIndex(columns[0]));
-				String name = cursor1.getString(cursor1.getColumnIndex(columns[1]));
-				String date = cursor1.getString(cursor1.getColumnIndex(columns[2]));
-				String msg = cursor1.getString(cursor1.getColumnIndex(columns[3]));
-				String type = cursor1.getString(cursor1.getColumnIndex(columns[4]));
+				String date = cursor1.getString(cursor1.getColumnIndex(columns[1]));
+				String msg = cursor1.getString(cursor1.getColumnIndex(columns[2]));
+				String type = cursor1.getString(cursor1.getColumnIndex(columns[3]));
 
 				/*traitement l'abs du nom contact*/
-				if(name == null)
+				if(number == null){
 					Inbox_name[pos]= "Inconnu";
-				else{
-					Inbox_name[pos]= nom_contact(name);
+					//Log.d("nom1", "inconnu");
 				}
-				Inbox_number[pos] = number; 
-				
+				else{
+					Inbox_name[pos]= nom_contact(getApplicationContext(), number);
+					if(Inbox_name[pos] == null)
+						Inbox_name[pos]= "Inconnu";
 
+					//Log.d("nom2", Inbox_name[pos]);
+				}
+
+				Inbox_number[pos] = number;
 
 				Inbox_date[pos]=date;
 				Inbox_type[pos]=type;
@@ -307,19 +318,19 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 			}
 		}
-		
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * Methode qui permet de recupere les SMS envoyés par le biai d'une
 	 * requete sql
@@ -330,28 +341,36 @@ public class SmsExplorer_activity extends ActionBarActivity {
 		Uri mSmsSend_itemQueryUri = Uri.parse("content://sms/sent");
 		Cursor cursor1 = getContentResolver().query(
 				mSmsSend_itemQueryUri,
-				new String[] { "_id", "thread_id", "address", "person", "date",
+				new String[] { "_id", "thread_id", "address", "date",
 						"body", "type" }, null, null, null);
 		startManagingCursor(cursor1);
-		String[] columns = new String[] { "address", "person", "date", "body",
-		"type" };
+		String[] columns = new String[] { "address", "date", "body",
+				"type" };
 		if (cursor1.getCount() > 0) {
-			
+
 
 			while (cursor1.moveToNext()) {
 
 				String number = cursor1.getString(cursor1.getColumnIndex(columns[0]));
-				String name = cursor1.getString(cursor1.getColumnIndex(columns[1]));
-				String date = cursor1.getString(cursor1.getColumnIndex(columns[2]));
-				String msg = cursor1.getString(cursor1.getColumnIndex(columns[3]));
-				String type = cursor1.getString(cursor1.getColumnIndex(columns[4]));
+				String date = cursor1.getString(cursor1.getColumnIndex(columns[1]));
+				String msg = cursor1.getString(cursor1.getColumnIndex(columns[2]));
+				String type = cursor1.getString(cursor1.getColumnIndex(columns[3]));
 				
 				/*traitement l'abs du nom contact*/
-				if(name == null)
+				if(number == null){
 					Inbox_name[pos]= "Inconnu";
-				else
-					Inbox_name[pos]= nom_contact(name);
-				
+					//Log.d("nom1", "inconnu");
+				}
+				else{
+					Inbox_name[pos]= nom_contact(getApplicationContext(), number);
+					if(Inbox_name[pos] == null)
+						Inbox_name[pos]= "Inconnu";
+
+					//Log.d("nom2", Inbox_name[pos]);
+				}
+
+
+				Log.d("nommm", Inbox_name[pos]);
 				Inbox_number[pos] =number;
 
 				Inbox_date[pos]=date;
@@ -364,107 +383,177 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 			}
 		}
-		
-	}
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * Fonction qui ajoute des éléments à la bare de notre activité
 	 * @param menu
 	 * @return boolean
 	 * @Override
 	 */
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        getMenuInflater().inflate(R.menu.menu_smsexplorer_activity, menu);
-        return true;
-    }
-    
+	public boolean onCreateOptionsMenu(Menu menu) {
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+		getMenuInflater().inflate(R.menu.menu_smsexplorer_activity, menu);
+		return true;
+	}
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * Fonction qui gère l'appui sur des éléments du menu
 	 * @param item
 	 * @return boolean
 	 * @Override
 	 */
-    public boolean onOptionsItemSelected(MenuItem item) {
-        
-        int id = item.getItemId();
+	@SuppressLint("SimpleDateFormat")
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+		String nomXml;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy_hh-mm"); //formateur de Date
+
         
         /*si user chosit de compressé la selection*/
-        if (id == R.id.action_compresser) {
+		if (id == R.id.action_compresser) {
         	/*si SMS reçu*/
-        	if(choix.equals("reçu")){
+			if(choix.equals("reçu")){
+
+				nomXml = "SMS_RECU_"+ sdf.format(new Date());
         		/*generer xml contenant sms selectionnés*/
-	            XmlFileSMS x = new XmlFileSMS(liste_sms, "/mnt/sdcard/donne_preso/SMS_RECU.xml", "sms_R");
-	            x.ecrire_sms_xml();
+				XmlFileSMS x = new XmlFileSMS(liste_sms, getFilesDir()+"/repository/sms/"+nomXml+".xml", "sms_Read");
+				x.ecrire_sms_xml();
 	            
 	            /*COMPRESSION*/
-	            /*suppression xml*/
+				Zipper zepi = new Zipper(9,false);
+				try {
+					zepi.zip(getFilesDir()+"/repository/sms/"+nomXml+".xml", getFilesDir()+"/repository/sms/"+nomXml);
+
+				} catch (IOException e) {
+					Toast.makeText(getBaseContext(), "Erreur de compresseion SMS", Toast.LENGTH_SHORT).show();
+				}
 	            
-        	}
+	            
+	            /*suppression xml temporaire*/
+				File file = new File(getFilesDir()+"/repository/sms/"+nomXml+".xml");
+				if(file.isFile())
+					file.delete();
+				
+				/*message a l'utilisateur*/
+				after_zip();
+
+			}
         	/*Si SMS envoyés*/
-        	else if(choix.equals("envoyer")){
+			else if(choix.equals("envoyer")){
+
+				nomXml = "SMS_ENVOYER_"+ sdf.format(new Date());
         		/*generer xml contenant sms selectionnés*/
-        		XmlFileSMS x = new XmlFileSMS(liste_sms, "/mnt/sdcard/donne_preso/SMS_ENVOYER.xml", "sms_W");
-	            x.ecrire_sms_xml();
+				XmlFileSMS x = new XmlFileSMS(liste_sms,  getFilesDir()+"/repository/sms/"+nomXml+".xml", "sms_Write");
+				x.ecrire_sms_xml();
 	            
 	            /*COMPRESSION*/
-	            /*suppression xml*/
-        	}
-        	return true;
-        }
+				Zipper zepi = new Zipper();
+				try {
+					zepi.zip(getFilesDir()+"/repository/sms/"+nomXml+".xml", getFilesDir()+"/repository/sms/"+nomXml);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	            
+	            /*suppression xml temporaire*/
+				File file = new File(getFilesDir()+"/repository/sms/"+nomXml+".xml");
+				if(file.isFile())
+					file.delete();
+	            
+	          /*message a l'utilisateur*/
+				after_zip();
+
+
+
+			}
+			return true;
+		}
         /*si user chosit de decompressé et lire le sms reçu (selectionné)*/
-        else if(id == R.id.action_lire){
-        	
-        	if(choix.equals("reçu")){
-        		/*teeste inverse*/
-        		
-        		/*liste sms a restaurer*/
-        		ArrayList<Sms> liste_sms_restauration = new ArrayList<Sms>();
-        		XmlFileSMS y = new XmlFileSMS(liste_sms_restauration, "/mnt/sdcard/donne_preso/SMS_RECU.xml");
-        		y.lire_sms_xml();
-        		Log.d("XML", "Lecture du xml");
-        		
-        		restaure_Sms(liste_sms_restauration);
+		else if(id == R.id.action_lire){
+
+			if(choix.equals("reçu")){
+				//A faire String conpresser
+			}
+			else if(choix.equals("envoyer")){
+				// AFINIR String conpresser
+			}
+
+			return true;
+		}
+        /*si user chosit de tout selectionné*/
+		else if(id == R.id.action_select_all){
+
+			for(int i = 0 ; i < sms_list.size() ; i++ ){
+
+				if(!liste_sms.contains(sms_list.get(i))){
+					//Ajout de l'élément à la liste des éléments cochés
+					liste_sms.add(sms_list.get(i));
+
+					//On met sa valeur cochée à true
+					sms_list.get(i).setChecked(true);
+				}
+
+			}
+			//Mise à jour des vues pour appliquer le background
+			populate_SmsExplorer_Item_ListView();
+
+			return true;
+		}
+        /*si user chosit de tout déselectionné*/
+		else if(id == R.id.action_unselect_all){
+
+			for(int i = 0 ; i < sms_list.size() ; i++ ){
 
 
-        		/*FIN teeste*/
-        	}
-        	else if(choix.equals("envoyer")){
-        		// AFINIR
-        	}
-        	
-        	return true;
-        }
+				if(liste_sms.contains(sms_list.get(i))){
 
-        return super.onOptionsItemSelected(item);
-    }
+					//On met sa valeur cochée à true
+					sms_list.get(i).setChecked(false);
+
+					//Ajout de l'élément à la liste des éléments cochés
+					liste_sms.remove(liste_sms.indexOf(sms_list.get(i)));
+				}
 
 
-    
-    
-    
-    
+			}
+			//Mise à jour des vues pour appliquer le background
+			populate_SmsExplorer_Item_ListView();
+		}
+
+
+
+		return super.onOptionsItemSelected(item);
+	}
+
+
+
+
+
+
 	/**
 	 * Classe interne
 	 */
@@ -494,8 +583,8 @@ public class SmsExplorer_activity extends ActionBarActivity {
 
 			//Être certain qu'on aura une vue sur laquelle on va bosser
 			View itemView = convertView;
-			
-			
+
+
 
 			//Si on a pas de vue
 			if(itemView == null){
@@ -516,18 +605,18 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			item_name.setText(currentItem.getNom()+" ("+currentItem.getNum()+")");
 
 			TextView item_extra = (TextView) itemView.findViewById(R.id.item_extra);
-			
-			
+
+
 			//traitement de la date
 			long l = Long.parseLong(currentItem.getDate());
 			Date d = new Date(l);
 			String date = DateFormat.getDateInstance(DateFormat.SHORT).format(d);
 			//traitement de l'heure
 			String heure = DateFormat.getTimeInstance().format(d).substring(0, 5);
-			
+
 
 			TextView item_date = (TextView) itemView.findViewById(R.id.item_date);
-			
+
 			//Si SMS reçu ajourd'hui
 			if(date.equals(DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()))){
 				item_date.setText(heure);
@@ -545,9 +634,9 @@ public class SmsExplorer_activity extends ActionBarActivity {
 					item_extra.setText(currentItem.getMsg().substring(0, 19)+"...");
 				else
 					item_extra.setText(currentItem.getMsg());
-				
+
 			}
-				
+
 			if(currentItem.isChecked()){
 				itemView.setBackgroundColor(Color.parseColor("#8027ae60"));
 			}else{
@@ -558,53 +647,45 @@ public class SmsExplorer_activity extends ActionBarActivity {
 			return itemView;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	void restaure_Sms(ArrayList<Sms> Sms_R_restauration){
-		ContentValues values = new ContentValues();
-		
-		for(int i = 0 ; i < Sms_R_restauration.size() ; i++){
-			Log.d("SMS n° "+i+": ", "Msg : "+Sms_R_restauration.get(i).getMsg());
-			values.put("address", Sms_R_restauration.get(i).getNum());
-			values.put("person", Sms_R_restauration.get(i).getNom());
-			values.put("date", Sms_R_restauration.get(i).getDate());
-			values.put("body", Sms_R_restauration.get(i).getMsg());
-			
-			values.put("type", Sms_R_restauration.get(i).getHeure());
-			getContentResolver().insert(Uri.parse("content://sms/inbox"), values);
+
+
+
+
+
+
+
+
+	public String nom_contact(Context context, String phoneNumber) {
+
+		ContentResolver cr = context.getContentResolver();
+		Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
+				Uri.encode(phoneNumber));
+		Cursor cursor = cr.query(uri,
+				new String[] { PhoneLookup.DISPLAY_NAME }, null, null, null);
+		if (cursor == null) {
+			return null;
 		}
-		
+		String contactName = null;
+		if (cursor.moveToFirst()) {
+			contactName = cursor.getString(cursor
+					.getColumnIndex(PhoneLookup.DISPLAY_NAME));
+		}
+		if (cursor != null && !cursor.isClosed()) {
+			cursor.close();
+		}
+		return contactName;
 	}
-	
-	String nom_contact(String id){
-		
-		  String contactName = null;
-		  
-	        // querying contact data store
-	        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, ContactsContract.Contacts._ID + " = ?", new String[]{id}, null);
-	 
-	        if (cursor.moveToFirst()) {
-	 
-	            // DISPLAY_NAME = The display name for the contact.
-	            // HAS_PHONE_NUMBER =   An indicator of whether this contact has at least one phone number.
-	 
-	            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-	        }
-	 
-	        cursor.close();
-	 
-	        Log.d("TAG", "Contact Name: " + contactName);
-	        return contactName;
-   }
-	
+
+
+
+	public void after_zip(){
+		liste_sms.clear();
+		Toast.makeText(getBaseContext(), "Compression effectuée", Toast.LENGTH_SHORT).show();
+		populateSmsExplorerList();
+		populate_SmsExplorer_Item_ListView();
+	}
+
 
 
 }
-
 

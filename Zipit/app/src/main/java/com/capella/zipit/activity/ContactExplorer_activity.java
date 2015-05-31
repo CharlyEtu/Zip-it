@@ -1,8 +1,12 @@
 package com.capella.zipit.activity;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -31,15 +35,16 @@ import com.capella.zipit.objet.Contact;
 import com.capella.zipit.tools.XmlFileCONTACTS;
 import com.capella.zipit.tools.Zipper;
 
+@SuppressLint("SimpleDateFormat")
 public class ContactExplorer_activity extends ActionBarActivity {
 
 	private android.support.v7.widget.Toolbar toolbar;
-	
+
 	/*liste Contact selectionner*/
 	private ArrayList<Contact> liste_contact = new ArrayList<Contact>();
 	/*pr la vue*/
 	private ArrayList<Contact> contact_list = new ArrayList<Contact>();
-	
+
 	/*initialisation des buffers*/
 	private String[] Contact_name=new String[4000],
 			Contact_number=new String[4000],
@@ -47,15 +52,15 @@ public class ContactExplorer_activity extends ActionBarActivity {
 
 	int pos=0;
 
-	
-	
-	
+
+
+
 	/**
 	 * Fonction lancée lors de la création de l'activité: 
 	 * on va dans cette methode recuperer le choix si choix = reçu
 	 * alors on liste les sms recus.
 	 * si choix = envoyer on liste les sms envoyes
-	 * 
+	 *
 	 * @param savedInstanceState
 	 * @Override
 	 */
@@ -83,11 +88,11 @@ public class ContactExplorer_activity extends ActionBarActivity {
 		//explorerContact_Click_on_Item();
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * Methode de poplation de notre vue 
 	 * permet de recuperer les contacts du device
@@ -97,58 +102,58 @@ public class ContactExplorer_activity extends ActionBarActivity {
 		Log.d("populateContact :", "entre ");
 
 		ContentResolver cr = getContentResolver();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
-        if (cur.getCount() > 0) {
-        	while (cur.moveToNext()) {
-        		
-        		//on recupere ID du contact
-        		id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+		Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
+		if (cur.getCount() > 0) {
+			while (cur.moveToNext()) {
 
-        		//recupere le nom du contact
-        		Contact_name[pos] = cur.getString(cur.getColumnIndex(Phone.DISPLAY_NAME));
+				//on recupere ID du contact
+				id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+
+				//recupere le nom du contact
+				Contact_name[pos] = cur.getString(cur.getColumnIndex(Phone.DISPLAY_NAME));
         		
 
         		/*traitement pour recuperer les nums du contact*/
-        		if(Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0)
-                {
-                    Cursor pCur = cr.query(Phone.CONTENT_URI,null, Phone.CONTACT_ID +" = ?",new String[]{ id }, null);
-               
-                    while (pCur.moveToNext()) 
-                    {
-                    	//on recupere les num de tel du contact courant
-                        Contact_number[pos] = pCur.getString(pCur.getColumnIndex(Phone.NUMBER));
-                        break;
-                    }
-                    pCur.close();
-                }
+				if(Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0)
+				{
+					Cursor pCur = cr.query(Phone.CONTENT_URI,null, Phone.CONTACT_ID +" = ?",new String[]{ id }, null);
+
+					while (pCur.moveToNext())
+					{
+						//on recupere les num de tel du contact courant
+						Contact_number[pos] = pCur.getString(pCur.getColumnIndex(Phone.NUMBER));
+						break;
+					}
+					pCur.close();
+				}
         		
         		
         		
         		/*traitement pour recuperer tous les adresses mail du contact*/
-        		Cursor mails = cr.query(Email.CONTENT_URI,null,Email.CONTACT_ID + " = " + id, null, null);
-        		while (mails.moveToNext()) 
-                { 
-        			//on recupere les adresses mails
-                    Contact_mail[pos] = mails.getString(mails.getColumnIndex(Email.DATA));
-                    break;
-                }
-                mails.close();
+				Cursor mails = cr.query(Email.CONTENT_URI,null,Email.CONTACT_ID + " = " + id, null, null);
+				while (mails.moveToNext())
+				{
+					//on recupere les adresses mails
+					Contact_mail[pos] = mails.getString(mails.getColumnIndex(Email.DATA));
+					break;
+				}
+				mails.close();
 
 
-        		//ajout a la liste de contact
-        		contact_list.add(new Contact(Contact_name[pos], Contact_number[pos], Contact_mail[pos]));
+				//ajout a la liste de contact
+				contact_list.add(new Contact(Contact_name[pos], Contact_number[pos], Contact_mail[pos]));
 
-        		pos++;
+				pos++;
 
-        		
-        	}
-        }
-       
+
+			}
+		}
+
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Fonction qui remplit la listview avec la liste des items
 	 */
@@ -162,10 +167,10 @@ public class ContactExplorer_activity extends ActionBarActivity {
 		//On passe l'adaptateur à la liste
 		list.setAdapter(adapter);
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Methode explorerContact_Long_Click_on_Item permet de gerer 
 	 * la selection d'un item ou plusieure items
@@ -235,9 +240,9 @@ public class ContactExplorer_activity extends ActionBarActivity {
 			}
 		});
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Classe interne
 	 */
@@ -267,15 +272,15 @@ public class ContactExplorer_activity extends ActionBarActivity {
 
 			//Être certain qu'on aura une vue sur laquelle on va bosser
 			View itemView = convertView;
-			
-			
+
+
 
 			//Si on a pas de vue
 			if(itemView == null){
 
 				//On récupère notre vue personnalisée
 				itemView = getLayoutInflater().inflate(R.layout.contactexplorerlist_item, parent,
-						false);																						
+						false);
 			}
 
 			//On récupère l'item à afficher
@@ -291,8 +296,8 @@ public class ContactExplorer_activity extends ActionBarActivity {
 			TextView item_extra = (TextView) itemView.findViewById(R.id.contact_tel);
 			item_extra.setText(currentItem.getNum());
 
-			
-				
+
+
 			if(currentItem.isChecked()){
 				itemView.setBackgroundColor(Color.parseColor("#8027ae60"));
 			}else{
@@ -303,16 +308,16 @@ public class ContactExplorer_activity extends ActionBarActivity {
 			return itemView;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -320,125 +325,163 @@ public class ContactExplorer_activity extends ActionBarActivity {
 		return true;
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * Fonction qui gère l'appui sur des éléments du menu
 	 * @param item
 	 * @return boolean
 	 * @Override
 	 */
-    public boolean onOptionsItemSelected(MenuItem item) {
-        
-        int id = item.getItemId();
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+		String nomXml;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy_hh-mm"); //formateur de Date
         
         /*si user chosit de compressé la selection*/
-        if (id == R.id.action_compresser) {
-        	
+		if (id == R.id.action_compresser) {
+
+			nomXml = "CONTACTS_"+ sdf.format(new Date());
         		/*generer xml contenant sms selectionnés*/
-	            XmlFileCONTACTS x = new XmlFileCONTACTS(liste_contact, "/mnt/sdcard/donne_preso/CONTACTS.xml", "CONTACTS");
-	            x.ecrire_contact_xml();
+			XmlFileCONTACTS x = new XmlFileCONTACTS(liste_contact, getFilesDir()+"/repository/contacts/"+nomXml+".xml", "CONTACTS");
+			x.ecrire_contact_xml();
 	            
 	            /*COMPRESSION*/
-	            Zipper lol = new Zipper(9, false);
-	            try {
-					lol.zip("/mnt/sdcard/donne_preso/CONTACTS.xml");
-				} catch (IOException e) {
-					Toast.makeText(getBaseContext(), "Erreur de compresseion", Toast.LENGTH_SHORT).show();
+			Zipper lol = new Zipper(9, false);
+			try {
+				lol.zip(getFilesDir()+"/repository/contacts/"+nomXml+".xml", getFilesDir()+"/repository/contacts/"+nomXml);
+			} catch (IOException e) {
+
+			}
+	            
+	            /*suppression xml temporaire*/
+			File file = new File(getFilesDir()+"/repository/contacts/"+nomXml+".xml");
+			if(file.isFile())
+				file.delete();
+				
+				/*message a l'utilisateur*/
+			after_zip();
+
+
+			return true;
+		}
+        /*si user chosit de tout selectionné*/
+		else if(id == R.id.action_select_all){
+
+			for(int i = 0 ; i < contact_list.size() ; i++ ){
+
+				if(!liste_contact.contains(contact_list.get(i))){
+					//Ajout de l'élément à la liste des éléments cochés
+					liste_contact.add(contact_list.get(i));
+
+					//On met sa valeur cochée à true
+					contact_list.get(i).setChecked(true);
 				}
-	            
-	            /*suppression xml*/
-	            
-        	
-        	return true;
-        }
-        /*si user chosit de decompressé et lire le sms reçu (selectionné)*/
-        else if(id == R.id.action_lire){
-        	
-        	
-        		/*teeste inverse*/
-        		
-        		/*liste sms a restaurer*/
-        		ArrayList<Contact> liste_contact_restauration = new ArrayList<Contact>();
-        		XmlFileCONTACTS y = new XmlFileCONTACTS(liste_contact_restauration, "/mnt/sdcard/donne_preso/CONTACTS.xml");
-        		y.lire_contact_xml();
-        		Log.d("XML", "Lecture du xml");
-        		
-        		restaure_Contact(liste_contact_restauration);
+
+			}
+			//Mise à jour des vues pour appliquer le background
+			populate_ContactExplorer_Item_ListView();
+
+			return true;
+		}
+        /*si user chosit de tout déselectionné*/
+		else if(id == R.id.action_unselect_all){
+
+			for(int i = 0 ; i < contact_list.size() ; i++ ){
+				Log.d("contact DEBUG", "taille contact_list = "+contact_list.size()+" et  liste_contact = "+ liste_contact.size()+" i = "+i);
+
+				if(liste_contact.contains(contact_list.get(i))){
+
+					//On met sa valeur cochée à true
+					contact_list.get(i).setChecked(false);
+
+					//Ajout de l'élément à la liste des éléments cochés
+					liste_contact.remove(liste_contact.indexOf(contact_list.get(i)));
+				}
 
 
-        		/*FIN teeste*/
-        	
-        	
-        	return true;
-        }
+			}
+			//Mise à jour des vues pour appliquer le background
+			populate_ContactExplorer_Item_ListView();
+		}
 
-        return super.onOptionsItemSelected(item);
-    }
-    
-    
-    
-    /**
-     * Methode restaure_Contact permet de restaurer les contacts 
-     * a partir d'une liste de contacts
-     * 
-     * @param Contacts_restauration
-     * */
-    void restaure_Contact(ArrayList<Contact> Contacts_restauration){
-    	for(int i = 0 ; i < Contacts_restauration.size() ; i++){
-    		ajoutContact(Contacts_restauration.get(i).getNom(), Contacts_restauration.get(i).getNum(), Contacts_restauration.get(i).getMail());
-    	}
-    	
-    	
-    }
-    
-    /**
-     * Methode ajoutContact cree un liste d'operation qu'elle execute
-     * qui consite a cree un contact "par etape" : nom , num, mail
-     * @param nom
-     * @param num
-     * @param mail
-     * */
-    private void ajoutContact(String nom, String num, String mail) {
-        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>(); 
-        operationList.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI) 
-                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null) 
-                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null) 
-                .build()); 
+		return super.onOptionsItemSelected(item);
+	}
 
-        // nom 
-        operationList.add(ContentProviderOperation.newInsert(Data.CONTENT_URI) 
-                .withValueBackReference(Data.RAW_CONTACT_ID, 0) 
-                .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE) 
-                .withValue(StructuredName.FAMILY_NAME, nom) 
-                .build()); 
-       
-        //numero de telephone
-        operationList.add(ContentProviderOperation.newInsert(Data.CONTENT_URI) 
-                .withValueBackReference(Data.RAW_CONTACT_ID, 0) 
-                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                .withValue(Phone.NUMBER, num)
-                .withValue(Phone.TYPE, Phone.TYPE_HOME)
-                .build());
-        
-        //mail si existant
-        if(mail != null){
-	        operationList.add(ContentProviderOperation.newInsert(Data.CONTENT_URI) 
-	                .withValueBackReference(Data.RAW_CONTACT_ID, 0)
-	
-	                .withValue(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE)
-	                .withValue(Email.DATA, mail)
-	                .withValue(Email.TYPE, Email.TYPE_WORK)
-	                .build());
-        }
 
-        try{ 
-            getContentResolver().applyBatch(ContactsContract.AUTHORITY, operationList); 
-        }catch(Exception e){ 
-            e.printStackTrace(); 
-        } 
-    }
 
-    
+//    /**
+//     * Methode restaure_Contact permet de restaurer les contacts 
+//     * a partir d'une liste de contacts
+//     * 
+//     * @param Contacts_restauration
+//     * */
+//    void restaure_Contact(ArrayList<Contact> Contacts_restauration){
+//    	for(int i = 0 ; i < Contacts_restauration.size() ; i++){
+//    		ajoutContact(Contacts_restauration.get(i).getNom(), Contacts_restauration.get(i).getNum(), Contacts_restauration.get(i).getMail());
+//    	}
+//    	
+//    	
+//    }
+//    
+//    /**
+//     * Methode ajoutContact cree un liste d'operation qu'elle execute
+//     * qui consite a cree un contact "par etape" : nom , num, mail
+//     * @param nom
+//     * @param num
+//     * @param mail
+//     * */
+//    private void ajoutContact(String nom, String num, String mail) {
+//        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>(); 
+//        operationList.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI) 
+//                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null) 
+//                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null) 
+//                .build()); 
+//
+//        // nom 
+//        operationList.add(ContentProviderOperation.newInsert(Data.CONTENT_URI) 
+//                .withValueBackReference(Data.RAW_CONTACT_ID, 0) 
+//                .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE) 
+//                .withValue(StructuredName.FAMILY_NAME, nom) 
+//                .build()); 
+//       
+//        //numero de telephone
+//        operationList.add(ContentProviderOperation.newInsert(Data.CONTENT_URI) 
+//                .withValueBackReference(Data.RAW_CONTACT_ID, 0) 
+//                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+//                .withValue(Phone.NUMBER, num)
+//                .withValue(Phone.TYPE, Phone.TYPE_HOME)
+//                .build());
+//        
+//        //mail si existant
+//        if(mail != null){
+//	        operationList.add(ContentProviderOperation.newInsert(Data.CONTENT_URI) 
+//	                .withValueBackReference(Data.RAW_CONTACT_ID, 0)
+//	
+//	                .withValue(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE)
+//	                .withValue(Email.DATA, mail)
+//	                .withValue(Email.TYPE, Email.TYPE_WORK)
+//	                .build());
+//        }
+//
+//        try{ 
+//            getContentResolver().applyBatch(ContactsContract.AUTHORITY, operationList); 
+//        }catch(Exception e){ 
+//            e.printStackTrace(); 
+//        } 
+//    }
+
+
+
+
+	public void after_zip(){
+		liste_contact.clear();
+		Toast.makeText(getBaseContext(), "Compression effectuée", Toast.LENGTH_SHORT).show();
+		populateContactExplorerList();
+		populate_ContactExplorer_Item_ListView();
+	}
+
+
 }

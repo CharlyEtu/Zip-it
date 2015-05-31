@@ -92,4 +92,6 @@
     <string name="photos"><![CDATA[Photos >]]></string>
     <string name="title_activity_contact_explorer_activity">Contacts</string>
     <string name="menu_delete">Supprimer</string>
+    <string name="deselectionne_tout">Déselectionner tout</string>
+    <string name="selectionne_tout">Sélectionner tout</string>
 </resources>

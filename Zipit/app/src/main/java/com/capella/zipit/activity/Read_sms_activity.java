@@ -1,5 +1,7 @@
 package com.capella.zipit.activity;
 
+import java.io.IOException;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,8 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.capella.zipit.R;
+import com.capella.zipit.tools.Zipper;
 
 public class Read_sms_activity extends ActionBarActivity {
 
@@ -31,7 +35,20 @@ public class Read_sms_activity extends ActionBarActivity {
 
         from_name.setText(getIntent().getStringExtra("from_name"));
         from_number.setText(getIntent().getStringExtra("from_number"));
-        from_message.setText(getIntent().getStringExtra("from_message"));
+
+
+        String decomp = "";
+
+        try {
+            decomp = Zipper.DeCompresserString(getIntent().getStringExtra("from_message"));
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "Probleme de decompression du contenu", Toast.LENGTH_SHORT).show();
+        }
+        if(!decomp.isEmpty())
+            from_message.setText(decomp);
+        else
+            from_message.setText(getIntent().getStringExtra("from_message"));
+
         from_date.setText(getIntent().getStringExtra("from_date"));
 
         //on attribue un listener adapté aux vues

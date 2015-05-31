@@ -27,156 +27,160 @@ public class XmlFileCONTACTS {
 
 	/*liste de contact*/
 	private ArrayList<com.capella.zipit.objet.Contact> liste;
-	
-	
+
+
 	/*nom fichier xml*/
 	private String nom_fichier_xml;
-	
+
 	/*nom de la racine du xml*/
 	private String racine;
 
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	/**
 	 * Constructeur XmlFile creer un objet XmlFile
 	 * pour les ecriture de Contact
-	 * 
+	 *
 	 * @param l
 	 * @param file
 	 * @param racine
-	 * 
+	 *
 	 * */
 	public XmlFileCONTACTS(ArrayList<Contact> l, String file, String racine) {
 		liste = l;
 		nom_fichier_xml = file;
 		this.racine = racine;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 	/**
 	 * Constructeur XmlFile creer un objet XmlFile
 	 * pour la lecture de SMS
-	 * 
+	 *
 	 * @param l
 	 * @param file
-	 * 
+	 *
 	 * */
 	public XmlFileCONTACTS(ArrayList<Contact> l, String file) {
 		liste = l;
 		nom_fichier_xml = file;
 	}
 
-	
-	
-	
 
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 	/**
 	 * Methode ecrire_contact_xml permet de creer un fichier XML
-	 * 
+	 *
 	 * */
 	public void ecrire_contact_xml(){
-		
+
 		Element mail = null;
+		Element num = null;
 		
 		/*récupération d'une instance de la classe "DocumentBuilderFactory"*/
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			
+
 		try {
 		    
 			/*création d'un parseur*/
-		     
-		    final DocumentBuilder builder = factory.newDocumentBuilder();
+
+			final DocumentBuilder builder = factory.newDocumentBuilder();
 		    		
 		    /* création d'un Document*/
-		    final Document document= builder.newDocument();
+			final Document document= builder.newDocument();
 						
 		    /*  création de l'Element racine*/
-		    final Element racine = document.createElement(this.racine);
-		    document.appendChild(racine);			
-				
-		    
-		    for(int i = 0 ; i < liste.size() ; i++ ){
+			final Element racine = document.createElement(this.racine);
+			document.appendChild(racine);
+
+
+			for(int i = 0 ; i < liste.size() ; i++ ){
 		    	
 		    	/* création d'un Contact*/
-			    final Element contact = document.createElement("contact");
-			    racine.appendChild(contact);
-			    
-			   
-			    final Element nom = document.createElement("nom");
+				final Element contact = document.createElement("contact");
+				racine.appendChild(contact);
+
+
+				final Element nom = document.createElement("nom");
 				nom.appendChild(document.createTextNode(liste.get(i).getNom()));
 			    
 			    
 			    /*num de tel*/
-			    final Element num = document.createElement("numero");
-			    num.appendChild(document.createTextNode(liste.get(i).getNum()));
-			    
-			    if(liste.get(i).getMail() != null){
-			    	mail = document.createElement("mail");
-			    	mail.appendChild(document.createTextNode(liste.get(i).getMail()));
-			    }
-			   
-			    
-			    
-			    contact.appendChild(nom);
+				if(liste.get(i).getNum() != null){
+					num = document.createElement("numero");
+					num.appendChild(document.createTextNode(liste.get(i).getNum()));
+				}
+
+				if(liste.get(i).getMail() != null){
+					mail = document.createElement("mail");
+					mail.appendChild(document.createTextNode(liste.get(i).getMail()));
+				}
+
+
+
+				contact.appendChild(nom);
 			    /*ajout des fils du noeud parent*/
-		    	contact.appendChild(num);
-		    	if(liste.get(i).getMail() != null)
-		    		contact.appendChild(mail);
-		    	
-		    }
+				if(liste.get(i).getNum() != null)
+					contact.appendChild(num);
+				if(liste.get(i).getMail() != null)
+					contact.appendChild(mail);
+
+			}
 		    
 		    /*affichage fichier ou sorti standard*/
-		    final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		    final Transformer transformer = transformerFactory.newTransformer();
-		    final DOMSource source = new DOMSource(document);
-		    final StreamResult sortie = new StreamResult(new File(nom_fichier_xml));
+			final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			final Transformer transformer = transformerFactory.newTransformer();
+			final DOMSource source = new DOMSource(document);
+			final StreamResult sortie = new StreamResult(new File(nom_fichier_xml));
 		    
 				
 		    /*prologue*/
-		    transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
-		    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-		    transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");			
+			transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
 		    		
 		    /*formatage*/
-		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 				
 		    /*sortie*/
-		    transformer.transform(source, sortie);	
+			transformer.transform(source, sortie);
 		}
 		catch (final ParserConfigurationException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 		catch (TransformerConfigurationException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 		catch (TransformerException e) {
-		    e.printStackTrace();
-		}		
-		
+			e.printStackTrace();
+		}
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Methode lire_contact_xml permet de lire un fichier XML
-	 * 
+	 *
 	 * */
 	public void lire_contact_xml(){
 		// AFINIR pr la restauration
@@ -188,21 +192,16 @@ public class XmlFileCONTACTS {
 			/* création d'un parseur*/
 			final DocumentBuilder builder = factory.newDocumentBuilder();
 
-
+			File tmp = new File(nom_fichier_xml);
+			File[] fichier = tmp.listFiles();System.out.println(fichier[0].getName());
 			/*création d'un Document */
-			final Document document= builder.parse(new File(this.nom_fichier_xml));
-
-			//Affiche du prologue
-//			System.out.println("*************PROLOGUE************");
-//			System.out.println("version : " + document.getXmlVersion());
-//			System.out.println("encodage : " + document.getXmlEncoding());		
-//			System.out.println("standalone : " + document.getXmlStandalone());
+			final Document document= builder.parse(new File(nom_fichier_xml+"/"+fichier[0].getName()));
 
 			/* récupération de l'Element racine */
 			final Element racine = document.getDocumentElement();
 
 			//Affichage de l'élément racine
-		//	System.out.println("\n*************RACINE************");
+			//	System.out.println("\n*************RACINE************");
 			//System.out.println(racine.getNodeName());
 
 			/*récupération des contacts*/
@@ -222,17 +221,17 @@ public class XmlFileCONTACTS {
 					final Element nom = (Element) contact.getElementsByTagName("nom").item(0);
 					final Element numero = (Element) contact.getElementsByTagName("numero").item(0);
 					final Element mail = (Element) contact.getElementsByTagName("mail").item(0);
-					
+
 
 					//Ajout a la liste des sms a traité
 					if(mail == null)
 						liste.add(new Contact(nom.getTextContent(), numero.getTextContent()));
 					else
 						liste.add(new Contact(nom.getTextContent(), numero.getTextContent(), mail.getTextContent()));
-					
 
-				}				
-			}			
+
+				}
+			}
 		}
 		catch (final ParserConfigurationException e) {
 			e.printStackTrace();
@@ -242,8 +241,8 @@ public class XmlFileCONTACTS {
 		}
 		catch (final IOException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
-	
-	
+
+
 }

@@ -5,12 +5,21 @@
         android:id="@+id/action_compresser"
         android:orderInCategory="100"
         android:title="@string/action_compresser"
-       />
-    
+        />
+
     <item
         android:id="@+id/action_lire"
         android:orderInCategory="100"
         android:title="@string/action_lire"
         />
+    <item
+        android:id="@+id/action_select_all"
+        android:orderInCategory="100"
+        android:title="@string/selectionne_tout"/>
+
+    <item
+        android:id="@+id/action_unselect_all"
+        android:orderInCategory="100"
+        android:title="@string/deselectionne_tout"/>
 
 </menu>
